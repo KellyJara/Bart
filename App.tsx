@@ -1,9 +1,9 @@
 import {SafeAreaProvider,} from 'react-native-safe-area-context';
 import { Provider } from 'react-redux';
-import LoginScreen from './src/screens/login';
-import ProductsScreen from './src/screens/products';
-import SignUpScreen from './src/screens/signup';
-import RegisterProductScreen from './src/screens/RegisterProduct';
+import LoginScreen from './src/screens/AuthModule/login';
+import ProductsScreen from './src/screens/ProductModule/products';
+import SignUpScreen from './src/screens/AuthModule/signup';
+import RegisterProductScreen from './src/screens/ProductModule/RegisterProduct';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 

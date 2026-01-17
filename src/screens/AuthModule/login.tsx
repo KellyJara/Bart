@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { useAppDispatch, useAppSelector } from '../redux/hooks';
-import { login } from "../redux/auth/authSlice";
-import {selectIsConnected} from "../redux/auth/authSelectors";
+import { useAppDispatch, useAppSelector } from '../../redux/hooks';
+import { login } from "../../redux/slices/auth/authSlice";
+import {selectIsConnected} from "../../redux/slices/auth/authSelectors";
+import styles from "./styles";
 
 import {
   View,
@@ -108,58 +109,5 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ navigation }) => {
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    padding: 24,
-    backgroundColor: '#f2f2f2',
-  },
-  title: {
-    fontSize: 28,
-    fontWeight: 'bold',
-    marginBottom: 32,
-    textAlign: 'center',
-  },
-  input: {
-    backgroundColor: '#fff',
-    padding: 14,
-    borderRadius: 8,
-    marginBottom: 16,
-    borderWidth: 1,
-    borderColor: '#ddd',
-  },
-  button: {
-    backgroundColor: '#0d6efd',
-    padding: 15,
-    borderRadius: 8,
-    alignItems: 'center',
-    marginTop: 8,
-  },
-  buttonText: {
-    color: '#fff',
-    fontWeight: 'bold',
-    fontSize: 16,
-  },
-  errorText: {
-    color: 'red',
-    textAlign: 'center',
-    marginTop: 10,
-  },
-  registerText: {
-    textAlign: 'center',
-    marginTop: 20,
-    color: '#555',
-  },
-  link: {
-    color: '#0d6efd',
-    fontWeight: 'bold',
-  },
-  registerContainer: {
-  marginTop: 20,
-  alignItems: 'center',
-},
-});
 
 export default LoginScreen;

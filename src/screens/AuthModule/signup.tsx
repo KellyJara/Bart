@@ -1,14 +1,15 @@
 import React, { useState } from 'react';
+
 import {
   View,
   Text,
   TextInput,
   TouchableOpacity,
-  StyleSheet,
   ActivityIndicator,
 } from 'react-native';
-import { useAppDispatch, useAppSelector } from '../redux/hooks';
-import { signup } from '../redux/auth/authSlice';
+import { useAppDispatch, useAppSelector } from '../../redux/hooks';
+import { signup } from '../../redux/slices/auth/authSlice';
+import styles from './styles'
 type SignUpScreenProps = {
   navigation: any;
 };
@@ -83,46 +84,4 @@ const SignUpScreen: React.FC<SignUpScreenProps> = ({ navigation }) => {
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    padding: 24,
-    backgroundColor: '#fff',
-  },
-  title: {
-    fontSize: 26,
-    fontWeight: 'bold',
-    marginBottom: 32,
-    textAlign: 'center',
-  },
-  input: {
-    borderWidth: 1,
-    borderColor: '#ddd',
-    borderRadius: 8,
-    padding: 12,
-    marginBottom: 16,
-  },
-  button: {
-    backgroundColor: '#4F46E5',
-    padding: 14,
-    borderRadius: 8,
-    alignItems: 'center',
-    marginTop: 8,
-  },
-  buttonText: {
-    color: '#fff',
-    fontWeight: 'bold',
-  },
-  error: {
-    color: 'red',
-    marginBottom: 12,
-    textAlign: 'center',
-  },
-  link: {
-    marginTop: 16,
-    textAlign: 'center',
-    color: '#4F46E5',
-  },
-});
 export default SignUpScreen;

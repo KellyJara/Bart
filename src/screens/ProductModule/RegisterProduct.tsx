@@ -10,25 +10,31 @@ import {
   ScrollView
 } from 'react-native';
 import { launchImageLibrary, Asset } from 'react-native-image-picker';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { useAppDispatch, useAppSelector } from '../../redux/hooks';
+import { RootStackParamList } from '../../redux/types/navigation.types';
+import { createProduct } from '../../redux/slices/product/productSlice';
+import { CreateProductPayload } from '../../redux/types/product.type';
+import styles from './styles'
 
-type ProductPayload = {
-  name: string;
-  category: string;
-  price: number;
-  imgURL: string;
-};
+type RegisterProductScreenNavigationProp = NativeStackNavigationProp<
+  RootStackParamList,
+  'RegisterProduct'
+>;
 
 type RegisterProductScreenProps = {
-  navigation: any;
+  navigation: RegisterProductScreenNavigationProp;
 };
 
-
 const RegisterProductScreen: React.FC<RegisterProductScreenProps> = ({ navigation }) => {
-  const [name, setName] = useState<string>('');
-  const [category, setCategory] = useState<string>('');
-  const [price, setPrice] = useState<string>('');
+  const dispatch = useAppDispatch();
+  const { loading } = useAppSelector(state => state.products);
+
+  const [name, setName] = useState('');
+  const [category, setCategory] = useState('');
+  const [price, setPrice] = useState('');
   const [image, setImage] = useState<Asset | null>(null);
-  const [imgURL, setImgURL] = useState<string>('');
+  const [imgURL, setImgURL] = useState('');
 
   const selectImage = () => {
     launchImageLibrary(
@@ -43,7 +49,6 @@ const RegisterProductScreen: React.FC<RegisterProductScreenProps> = ({ navigatio
         const asset = response.assets[0];
         setImage(asset);
 
-        // Generación de URL según tu esquema
         const fileName = asset.fileName || `product_${Date.now()}.jpg`;
         setImgURL(`https://mi-backend.com/uploads/${fileName}`);
       }
@@ -51,29 +56,30 @@ const RegisterProductScreen: React.FC<RegisterProductScreenProps> = ({ navigatio
   };
 
   const registerProduct = async () => {
-    if (!name || !category || !price || !image) {
+    if (!name || !category || !price || !imgURL) {
       Alert.alert('Error', 'Completa todos los campos');
       return;
     }
 
-    const product: ProductPayload = {
+    const payload: CreateProductPayload = {
       name,
       category,
       price: Number(price),
       imgURL,
+      description: '',
+      stock: 0,
+      isActive: true,
+      inCart: false
     };
 
-    console.log('Producto a enviar:', product);
+    try {
+      await dispatch(createProduct(payload)).unwrap();
 
-    /*
-    await fetch('http://TU_IP_LOCAL:3000/products', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(product)
-    });
-    */
-
-    Alert.alert('Éxito', 'Producto registrado');
+      Alert.alert('Éxito', 'Producto registrado');
+      navigation.goBack();
+    } catch (error: any) {
+      Alert.alert('Error', error || 'No se pudo registrar el producto');
+    }
   };
 
   return (
@@ -104,49 +110,23 @@ const RegisterProductScreen: React.FC<RegisterProductScreenProps> = ({ navigatio
 
       <Button title="Seleccionar Imagen" onPress={selectImage} />
 
-      {image && (
-        <Image
-          source={{ uri: image.uri }}
-          style={styles.image}
-        />
+      {image?.uri && (
+        <Image source={{ uri: image.uri }} style={styles.image} />
       )}
 
       {imgURL !== '' && (
         <Text style={styles.url}>{imgURL}</Text>
       )}
 
-      <Button title="Registrar Producto" onPress={registerProduct} />
+      <Button
+        title={loading ? 'Registrando...' : 'Registrar Producto'}
+        onPress={registerProduct}
+        disabled={loading}
+      />
     </ScrollView>
   );
 };
 
 export default RegisterProductScreen;
 
-const styles = StyleSheet.create({
-  container: {
-    padding: 20
-  },
-  title: {
-    fontSize: 22,
-    marginBottom: 20,
-    textAlign: 'center'
-  },
-  input: {
-    borderWidth: 1,
-    borderColor: '#ccc',
-    padding: 10,
-    marginBottom: 10,
-    borderRadius: 5
-  },
-  image: {
-    width: '100%',
-    height: 200,
-    marginVertical: 10,
-    borderRadius: 5
-  },
-  url: {
-    fontSize: 12,
-    color: '#555',
-    marginBottom: 10
-  }
-});
+
