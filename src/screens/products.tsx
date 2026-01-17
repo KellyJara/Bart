@@ -1,7 +1,9 @@
 import React from 'react';
-import { useSelector } from 'react-redux';
-import { useNavigation } from '@react-navigation/native';
-import { selectIsAdmin, selectIsModerator } from '../redux/authSelectors';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+
+import { useAppSelector } from '../redux/hooks';
+import { selectIsAdmin, selectIsModerator } from '../redux/auth/authSelectors';
+import { RootStackParamList } from '../types/navigation.types';
 
 import {
   View,
@@ -12,35 +14,48 @@ import {
   StyleSheet,
 } from 'react-native';
 
-const products = [
+type Product = {
+  id: string;
+  name: string;
+  price: string;
+  image: string;
+};
+
+type ProductsScreenNavigationProp = NativeStackNavigationProp<
+  RootStackParamList,
+  'Products'
+>;
+
+type ProductsScreenProps = {
+  navigation: ProductsScreenNavigationProp;
+};
+
+const products: Product[] = [
   { id: '1', name: 'Producto 1', price: '$25', image: 'https://via.placeholder.com/150' },
   { id: '2', name: 'Producto 2', price: '$40', image: 'https://via.placeholder.com/150' },
   { id: '3', name: 'Producto 3', price: '$18', image: 'https://via.placeholder.com/150' },
 ];
 
-export default function ProductsScreen() {
-  const navigation = useNavigation();
+const ProductsScreen: React.FC<ProductsScreenProps> = ({ navigation }) => {
 
-  const isAdmin = useSelector(selectIsAdmin);
-  const isModerator = useSelector(selectIsModerator);
+ // const isAdmin = useAppSelector(selectIsAdmin);
+  //const isModerator = useAppSelector(selectIsModerator);
 
-  const canCreateProduct = isAdmin || isModerator;
+  //const canCreateProduct = isAdmin || isModerator;
 
   return (
-    <FlatList
+    <FlatList<Product>
       data={products}
       keyExtractor={item => item.id}
       contentContainerStyle={styles.container}
 
       ListHeaderComponent={
-        canCreateProduct ? (
           <TouchableOpacity
             style={styles.createButton}
             onPress={() => navigation.navigate('RegisterProduct')}
           >
             <Text style={styles.createButtonText}>+ Crear producto</Text>
           </TouchableOpacity>
-        ) : null
       }
 
       renderItem={({ item }) => (
@@ -58,6 +73,7 @@ export default function ProductsScreen() {
   );
 }
 
+export default ProductsScreen;
 const styles = StyleSheet.create({
   container: {
     padding: 16,

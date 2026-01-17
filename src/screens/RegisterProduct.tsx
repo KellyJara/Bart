@@ -9,15 +9,26 @@ import {
   Alert,
   ScrollView
 } from 'react-native';
+import { launchImageLibrary, Asset } from 'react-native-image-picker';
 
-import { launchImageLibrary } from 'react-native-image-picker';
+type ProductPayload = {
+  name: string;
+  category: string;
+  price: number;
+  imgURL: string;
+};
 
-const RegisterProductScreen = () => {
-  const [name, setName] = useState('');
-  const [category, setCategory] = useState('');
-  const [price, setPrice] = useState('');
-  const [image, setImage] = useState(null);
-  const [imgURL, setImgURL] = useState('');
+type RegisterProductScreenProps = {
+  navigation: any;
+};
+
+
+const RegisterProductScreen: React.FC<RegisterProductScreenProps> = ({ navigation }) => {
+  const [name, setName] = useState<string>('');
+  const [category, setCategory] = useState<string>('');
+  const [price, setPrice] = useState<string>('');
+  const [image, setImage] = useState<Asset | null>(null);
+  const [imgURL, setImgURL] = useState<string>('');
 
   const selectImage = () => {
     launchImageLibrary(
@@ -27,9 +38,9 @@ const RegisterProductScreen = () => {
       },
       (response) => {
         if (response.didCancel) return;
+        if (!response.assets || response.assets.length === 0) return;
 
         const asset = response.assets[0];
-
         setImage(asset);
 
         // Generación de URL según tu esquema
@@ -45,7 +56,7 @@ const RegisterProductScreen = () => {
       return;
     }
 
-    const product = {
+    const product: ProductPayload = {
       name,
       category,
       price: Number(price),

@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
-import { useDispatch, useSelector } from "react-redux";
-import { login } from "../redux/authSlice.js";
-import { useEffect } from "react";
-import {selectIsConnected} from "../redux/authSelectors.js"
+import React, { useState, useEffect } from 'react';
+import { useAppDispatch, useAppSelector } from '../redux/hooks';
+import { login } from "../redux/auth/authSlice";
+import {selectIsConnected} from "../redux/auth/authSelectors";
+
 import {
   View,
   Text,
@@ -12,14 +12,18 @@ import {
   ActivityIndicator,
 } from 'react-native';
 
-export default function LoginScreen({ navigation }) {
-  const dispatch = useDispatch();
-  const { loading, error, token } = useSelector(state => state.auth);
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const isConnected = useSelector(selectIsConnected);
+type LoginScreenProps = {
+  navigation: any;
+};
 
-  const handleLogin = async () => {
+const LoginScreen: React.FC<LoginScreenProps> = ({ navigation }) => {
+  const dispatch = useAppDispatch();
+  const { loading, error, token } = useAppSelector(state => state.auth);
+  const [email, setEmail] = useState<string>('');
+  const [password, setPassword] = useState<string>('');
+  const isConnected = useAppSelector(selectIsConnected);
+
+  const handleLogin = () => {
     dispatch(login({ email, password }));
     console.log('Intentando iniciar sesión con:', { email, password });
     };
@@ -28,7 +32,7 @@ export default function LoginScreen({ navigation }) {
     if (isConnected) {
       navigation.navigate('Products');
     }
-  }, [isConnected]);
+  }, [isConnected, navigation]);
 
   /*try {
     URL del backend: usa la IP de tu PC en la red Wi-Fi
@@ -152,5 +156,10 @@ const styles = StyleSheet.create({
     color: '#0d6efd',
     fontWeight: 'bold',
   },
+  registerContainer: {
+  marginTop: 20,
+  alignItems: 'center',
+},
 });
 
+export default LoginScreen;

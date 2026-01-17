@@ -1,17 +1,27 @@
-import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import api from '../api/axios';
+import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
+import api from '../../api/axios.ts';
+import {
+  AuthResponse,
+  LoginPayload,
+  SignupPayload,
+  AuthState,
+} from '../../types/auth.types.ts';
 
 /* ---------- LOGIN ---------- */
-export const login = createAsyncThunk(
+export const login = createAsyncThunk<
+  AuthResponse,          // lo que devuelve
+  LoginPayload,          // lo que recibe
+  { rejectValue: string }
+ >(
   'auth/login',
   async ({ email, password }, thunkAPI) => {
     try {
-      const response = await api.post('/auth/signin/', {
+      const response = await api.post<AuthResponse>('/auth/signin/', {
         email,
         password,
       });
       return response.data; // { token, roles }
-    } catch (error) {
+    } catch (error: any) {
       return thunkAPI.rejectWithValue(
         error.response?.data?.message || 'Error al iniciar sesión'
       );
@@ -20,17 +30,21 @@ export const login = createAsyncThunk(
 );
 
 /* ---------- SIGN UP ---------- */
-export const signup = createAsyncThunk(
+export const signup = createAsyncThunk<
+  AuthResponse,
+  SignupPayload,
+  { rejectValue: string }
+>(
   'auth/signup',
   async ({ username, email, password }, thunkAPI) => {
     try {
-      const response = await api.post('/auth/signup/', {
+      const response = await api.post<AuthResponse>('/auth/signup/', {
         username,
         email,
         password,
       });
       return response.data; // { token, roles }
-    } catch (error) {
+    } catch (error:any) {
       return thunkAPI.rejectWithValue(
         error.response?.data?.message || 'Error al registrarse'
       );
@@ -38,14 +52,17 @@ export const signup = createAsyncThunk(
   }
 );
 
+/* ---------- INITIAL STATE ---------- */
+const initialState: AuthState = {
+  token: null,
+  roles: [],
+  loading: false,
+  error: null,
+};
+/* ---------- SLICE ---------- */
 const authSlice = createSlice({
   name: 'auth',
-  initialState: {
-    token: null,
-    roles: [],
-    loading: false,
-    error: null,
-  },
+  initialState,
   reducers: {
     logout: (state) => {
       state.token = null;
@@ -59,14 +76,16 @@ const authSlice = createSlice({
         state.loading = true;
         state.error = null;
       })
-      .addCase(login.fulfilled, (state, action) => {
+      .addCase(
+        login.fulfilled, 
+        (state, action: PayloadAction<AuthResponse>) => {
         state.loading = false;
         state.token = action.payload.token;
         state.roles = action.payload.roles;
       })
       .addCase(login.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.payload;
+        state.error = action.payload??'unknown error';
       })
 
       /* SIGNUP */
@@ -74,14 +93,14 @@ const authSlice = createSlice({
         state.loading = true;
         state.error = null;
       })
-      .addCase(signup.fulfilled, (state, action) => {
+      .addCase(signup.fulfilled, (state, action:PayloadAction<AuthResponse>) => {
         state.loading = false;
         state.token = action.payload.token;
         state.roles = action.payload.roles;
       })
       .addCase(signup.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.payload;
+        state.error = action.payload??'unknown error';
       });
   },
 });

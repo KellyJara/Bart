@@ -7,12 +7,15 @@ import {
   StyleSheet,
   ActivityIndicator,
 } from 'react-native';
-import { useDispatch, useSelector } from 'react-redux';
-import { signup } from '../redux/authSlice';
+import { useAppDispatch, useAppSelector } from '../redux/hooks';
+import { signup } from '../redux/auth/authSlice';
+type SignUpScreenProps = {
+  navigation: any;
+};
 
-export default function SignUpScreen({ navigation }) {
-  const dispatch = useDispatch();
-  const { loading, error } = useSelector((state) => state.auth);
+const SignUpScreen: React.FC<SignUpScreenProps> = ({ navigation }) => {
+  const dispatch = useAppDispatch();
+  const { loading, error } = useAppSelector((state) => state.auth);
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -122,3 +125,4 @@ const styles = StyleSheet.create({
     color: '#4F46E5',
   },
 });
+export default SignUpScreen;
