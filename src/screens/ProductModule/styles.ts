@@ -4,10 +4,54 @@ const styles = StyleSheet.create({
   container: {
     padding: 20
   },
+  center: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
   title: {
     fontSize: 22,
     marginBottom: 20,
+    marginTop:50,
     textAlign: 'center'
+  },
+   name: {
+    fontSize: 24,
+    fontWeight: 'bold'
+  },
+  price: {
+    fontSize: 20,
+    color: '#2ecc71',
+    marginVertical: 8
+  },
+  category: {
+    fontSize: 14,
+    color: '#666'
+  },
+  owner: {
+    fontSize: 14,
+    marginTop: 4,
+    color: '#444'
+  },
+  section: {
+    marginTop: 20
+  },
+  sectionTitle: {
+    fontSize: 18,
+    fontWeight: '600',
+    marginBottom: 6
+  },
+  description: {
+    fontSize: 15,
+    lineHeight: 22,
+    color: '#333'
+  },
+  meta: {
+    marginTop: 20,
+    gap: 6
+  },
+  error: {
+    color: 'red'
   },
   input: {
     borderWidth: 1,
@@ -46,15 +90,6 @@ const styles = StyleSheet.create({
     padding: 16,
     marginBottom: 16,
     elevation: 3,
-  },
-  name: {
-    fontSize: 18,
-    fontWeight: 'bold',
-  },
-  price: {
-    fontSize: 16,
-    color: '#0d6efd',
-    marginVertical: 6,
   },
   button: {
     backgroundColor: '#0d6efd',

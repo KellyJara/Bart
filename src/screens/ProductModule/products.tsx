@@ -47,16 +47,23 @@ const ProductsScreen: React.FC<ProductsScreenProps> = ({ navigation }) => {
       }
 
       renderItem={({ item }) => (
-        <View style={styles.card}>
-          <Image source={{ uri: item.imgURL }} style={styles.image} />
-          <Text style={styles.name}>{item.name}</Text>
-          <Text style={styles.price}>${item.price}</Text>
+   <TouchableOpacity
+     style={styles.card}
+     onPress={() =>
+        navigation.navigate('ProductDetail', 
+          {productId: item._id})
+    }
+  >
+    <Image source={{ uri: item.imgURL }} style={styles.image} />
+    <Text style={styles.name}>{item.name}</Text>
+    <Text style={styles.price}>${item.price}</Text>
 
-          <TouchableOpacity style={styles.button}>
-            <Text style={styles.buttonText}>Comprar</Text>
-          </TouchableOpacity>
-        </View>
-      )}
+    <TouchableOpacity style={styles.button}>
+      <Text style={styles.buttonText}>Comprar</Text>
+    </TouchableOpacity>
+  </TouchableOpacity>
+)}
+
     />
   );
 };

@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
-import { Product, createProductPayload } from '../../types/product.type';
+import { Product, CreateProductPayload, updateProductPayload } from '../../types/product.type';
 import { productService } from '../../services/productService';
 
 interface ProductState {
@@ -35,7 +35,7 @@ export const fetchProductById = createAsyncThunk<Product, string>(
 
 export const createProduct = createAsyncThunk<
   Product,
-  createProductPayload
+  CreateProductPayload
 >(
   'products/create',
   async (payload) => {
@@ -47,7 +47,7 @@ export const createProduct = createAsyncThunk<
 
 export const updateProduct = createAsyncThunk<
   Product,
-  { id: string; product: Product }
+  { id: string; product: updateProductPayload }
 >(
   'products/update',
   async ({ id, product }) => {
@@ -85,8 +85,19 @@ const productSlice = createSlice({
       })
 
       // FETCH BY ID
+      .addCase(fetchProductById.pending, (state) => {
+       state.loading = true;
+       state.selectedProduct = null;
+       })
+
       .addCase(fetchProductById.fulfilled, (state, action) => {
+        state.loading = false;
         state.selectedProduct = action.payload;
+      })
+
+      .addCase(fetchProductById.rejected, (state, action) => {
+      state.loading = false;
+      state.error = action.error.message ?? 'Error al cargar producto';
       })
 
       // CREATE

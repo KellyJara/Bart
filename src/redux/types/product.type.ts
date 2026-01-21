@@ -8,6 +8,7 @@ export interface Product {
   stock: number;
   isActive: boolean;
   inCart: boolean;
+  owner: ProductOwner;
   createdAt: string;
   updatedAt: string;
 }
@@ -51,6 +52,10 @@ export interface updateProductPayload {
   inCart?: boolean;
 }
 
+export interface ProductOwner {
+  _id: string;
+  username: string;
+}
 
 export interface ProductState {
  items: Product[];
