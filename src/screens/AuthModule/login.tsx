@@ -31,7 +31,7 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ navigation }) => {
 
   useEffect(() => {
     if (isConnected) {
-      navigation.navigate('Products');
+      navigation.navigate('Main');
     }
   }, [isConnected, navigation]);
 

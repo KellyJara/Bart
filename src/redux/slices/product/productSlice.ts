@@ -1,6 +1,7 @@
 import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
 import { Product, CreateProductPayload, updateProductPayload } from '../../types/product.type';
 import { productService } from '../../services/productService';
+import api from '../../api/axios';
 
 interface ProductState {
   items: Product[];

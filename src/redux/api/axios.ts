@@ -1,20 +1,27 @@
-import axios,{ AxiosRequestConfig } from 'axios';
+import axios from 'axios';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const api = axios.create({
-  baseURL: 'http://192.168.1.83:4000/api', // Android emulator
+  baseURL: 'http://192.168.1.83:4000/api',
   headers: {
     'Content-Type': 'application/json',
   },
 });
 
-/*api.interceptors.request.use((config: AxiosRequestConfig) => {
-  const token = localStorage.getItem('token');
+api.interceptors.request.use(
+  async (config) => {
+    const token = await AsyncStorage.getItem('token');
 
-  if (token && config.headers) {
-    config.headers['x-access-token'] = token;
-  }
+    console.log('TOKEN ENVIADO DESDE AXIOS:', token);
 
-  return config;
-});*/
+    if (token && config.headers) {
+      config.headers['x-access-token'] = token; // ✅ STRING
+    }
+
+    return config;
+  },
+  (error) => Promise.reject(error)
+);
 
 export default api;
+

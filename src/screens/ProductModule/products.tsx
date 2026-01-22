@@ -37,15 +37,6 @@ const ProductsScreen: React.FC<ProductsScreenProps> = ({ navigation }) => {
       keyExtractor={(item) => item._id}
       contentContainerStyle={styles.container}
 
-      ListHeaderComponent={
-        <TouchableOpacity
-          style={styles.createButton}
-          onPress={() => navigation.navigate('RegisterProduct')}
-        >
-          <Text style={styles.createButtonText}>+ Crear producto</Text>
-        </TouchableOpacity>
-      }
-
       renderItem={({ item }) => (
    <TouchableOpacity
      style={styles.card}

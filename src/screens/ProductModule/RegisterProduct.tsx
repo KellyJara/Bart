@@ -33,6 +33,8 @@ const RegisterProductScreen: React.FC<RegisterProductScreenProps> = ({ navigatio
   const [name, setName] = useState('');
   const [category, setCategory] = useState('');
   const [price, setPrice] = useState('');
+  const [description, setDescription] = useState('');
+  const [stock, setStock] = useState('');
   const [image, setImage] = useState<Asset | null>(null);
   const [imgURL, setImgURL] = useState('');
 
@@ -73,12 +75,14 @@ const RegisterProductScreen: React.FC<RegisterProductScreenProps> = ({ navigatio
     };
 
     try {
+      console.log('📦 PAYLOAD A ENVIAR:', payload);
       await dispatch(createProduct(payload)).unwrap();
+      console.log("enviando producto")
 
       Alert.alert('Éxito', 'Producto registrado');
       navigation.goBack();
     } catch (error: any) {
-      Alert.alert('Error', error || 'No se pudo registrar el producto');
+      Alert.alert('Error', JSON.stringify(error));
     }
   };
 
@@ -106,6 +110,21 @@ const RegisterProductScreen: React.FC<RegisterProductScreenProps> = ({ navigatio
         keyboardType="numeric"
         value={price}
         onChangeText={setPrice}
+      />
+
+      <TextInput
+        style={styles.input}
+        placeholder="Descripción"
+        value={description}
+        onChangeText={setDescription}
+      />
+
+      <TextInput
+        style={styles.input}
+        placeholder="Stock"
+        keyboardType="numeric"
+        value={stock}
+        onChangeText={setStock}
       />
 
       <Button title="Seleccionar Imagen" onPress={selectImage} />
