@@ -14,6 +14,9 @@ import SignUpScreen from './src/screens/AuthModule/signup';
 import RegisterProductScreen from './src/screens/ProductModule/RegisterProduct';
 import ProductDetailScreen from './src/screens/ProductModule/ProductDetailScreen';
 import ChatScreen from './src/screens/ChatModule/ChatScreen'
+import MessageScreen from './src/screens/ChatModule/MessageScreen';
+
+import { initSocketListeners } from './src/redux/slices/chat/socketListeners';
 
 import { store } from './src/redux/store';
 
@@ -64,8 +67,8 @@ function MainTabs() {
         }}
       />
       <Tab.Screen
-        name="Chat"
-        component={ChatScreen}
+        name="MessageScreen"
+        component={MessageScreen}
         options={{
           tabBarLabel: 'Chat', // texto
         }}
@@ -100,12 +103,24 @@ function AppStack() {
         component={MainTabs}
         options={{ headerShown: false }}
       />
+      <Stack.Screen
+        name="Chat"
+        component={ChatScreen}
+        options={{ headerShown: false }}
+      />
     </Stack.Navigator>
   );
 }
 
 function App() {
   const dispatch = useAppDispatch();
+  const userId = useAppSelector(state => state.auth.userId);
+
+  useEffect(() => {
+    if (userId) {
+      initSocketListeners(userId);
+    }
+  }, [userId]);
 
   useEffect(() => {
     dispatch(loadToken()); // Cargar token guardado al iniciar

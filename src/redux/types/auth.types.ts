@@ -1,6 +1,7 @@
 export interface AuthResponse {
   token: string;
   roles: string[];
+  userId: string;
 }
 
 export interface LoginPayload {
@@ -17,6 +18,7 @@ export interface SignupPayload {
 export interface AuthState {
   token: string | null;
   roles: string[];
+  userId: string | null;
   loading: boolean;
   error: string | null;
 }

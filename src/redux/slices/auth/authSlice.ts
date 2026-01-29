@@ -44,6 +44,7 @@ export const loadToken = createAsyncThunk<string | null>(
 const initialState: AuthState = {
   token: null,
   roles: [],
+  userId: null,
   loading: false,
   error: null,
 };
@@ -70,6 +71,7 @@ const authSlice = createSlice({
         state.loading = false;
         state.token = action.payload.token;
         state.roles = action.payload.roles;
+        state.userId = action.payload.userId;
       })
       .addCase(login.rejected, (state, action) => {
         state.loading = false;
