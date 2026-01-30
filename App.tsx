@@ -15,11 +15,15 @@ import RegisterProductScreen from './src/screens/ProductModule/RegisterProduct';
 import ProductDetailScreen from './src/screens/ProductModule/ProductDetailScreen';
 import ChatScreen from './src/screens/ChatModule/ChatScreen'
 import MessageScreen from './src/screens/ChatModule/MessageScreen';
-import MyProductsScreen from './src/screens/ProductModule/MyProductsScreen'
+import MyProductsScreen from './src/screens/ProductModule/MyProductsScreen';
+import EditProductScreen from './src/screens/ProductModule/EditProductScreen'
+import EditProfileScreen from './src/screens/ProfileModule/EditProfileScreen'
+import SellerProfileScreen from './src/screens/ProfileModule/SellerProfile';
+import ProfileHeaderLeft from './src/components/ProfileHeaderLeft';
+import LogoutButton from './src/components/headerRight';
 
 import { initSocketListeners } from './src/redux/slices/chat/socketListeners';
 
-import { store } from './src/redux/store';
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator()
@@ -30,27 +34,47 @@ function ProductsStack() {
       <Stack.Screen
         name="Products"
         component={ProductsScreen}
-        options={{ headerShown: false }}
+        options={({ navigation }) => ({
+        headerShown: true,
+        headerTitle: '',
+        headerLeft: () => <ProfileHeaderLeft navigation={navigation} />,
+        headerRight: () => <LogoutButton navigation={navigation} />,
+       })}
       />
       <Stack.Screen
         name="ProductDetail"
         component={ProductDetailScreen}
-        options={{ headerShown: false }}
+        options={{ headerShown: true }}
       />
       <Stack.Screen
         name="RegisterProduct"
         component={RegisterProductScreen}
-        options={{ headerShown: false }}
+        options={{ headerShown: true }}
       />
       <Stack.Screen
         name="AddProduct"
         component={RegisterProductScreen}
-        options={{ headerShown: false }}
+        options={{ headerShown: true }}
       />
       <Stack.Screen
         name="MyProducts"
         component={MyProductsScreen}
-        options={{ headerShown: false }}
+        options={{ headerShown: true }}
+      />
+      <Stack.Screen
+        name="EditProduct"
+        component={EditProductScreen}
+        options={{ headerShown: true }}
+      />
+      <Stack.Screen
+        name="EditProfile"
+        component={EditProfileScreen}
+        options={{ headerShown: true }}
+      />
+      <Stack.Screen
+        name="SellerProfile"
+        component={SellerProfileScreen}
+        options={{ headerShown: true }}
       />
     </Stack.Navigator>
   );
@@ -76,6 +100,7 @@ function MainTabs() {
         name="MessageScreen"
         component={MessageScreen}
         options={{
+          headerShown: true,
           tabBarLabel: 'Chat', // texto
         }}
       />
@@ -83,6 +108,7 @@ function MainTabs() {
         name="My Products"
         component={MyProductsScreen}
         options={{
+          headerShown: true,
           tabBarLabel: 'My Product', // texto
         }}
       />
@@ -112,7 +138,7 @@ function AppStack() {
       <Stack.Screen
         name="Chat"
         component={ChatScreen}
-        options={{ headerShown: false }}
+        options={{ headerShown: true }}
       />
     </Stack.Navigator>
   );

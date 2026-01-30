@@ -102,5 +102,23 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontWeight: 'bold',
   },
+   sellerAvatarContainer: {
+    position: 'absolute',
+    bottom: 10,
+    right: 5,
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    overflow: 'hidden',
+    borderWidth: 2,
+    borderColor: '#fff',
+    backgroundColor: '#fff',
+    margin: 50,
+  },
+  sellerAvatar: {
+    width: '100%',
+    height: '100%',
+    borderRadius: 20,
+  },
 });
 export default styles;

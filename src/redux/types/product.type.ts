@@ -55,6 +55,7 @@ export interface updateProductPayload {
 export interface ProductOwner {
   _id: string;
   username: string;
+  profileImg: string; 
 }
 
 export interface ProductState {

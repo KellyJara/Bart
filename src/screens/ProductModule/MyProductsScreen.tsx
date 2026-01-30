@@ -6,6 +6,7 @@ import {
   Button,
   Alert,
   StyleSheet,
+  TouchableOpacity,
 } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigation } from '@react-navigation/native';
@@ -47,6 +48,13 @@ export default function MyProducts() {
     );
   };
 
+  const handleEdit = (productId: string) => {
+  navigation.navigate('Products', {
+    screen: 'EditProduct',
+    params: { id: productId }, // 👈 cambiar productId a id
+  });
+};
+
   if (loading) {
     return (
       <View style={styles.center}>
@@ -59,13 +67,15 @@ export default function MyProducts() {
     <View style={styles.container}>
       <Text style={styles.title}>Mis productos</Text>
 
-      {/* 🔹 BOTÓN CREAR PRODUCTO */}
+      {/* BOTÓN CREAR PRODUCTO */}
       <View style={styles.createButton}>
         <Button
           title="Crear producto"
-          onPress={() => navigation.navigate('Products', {
-          screen: 'AddProduct',
-        })}
+          onPress={() =>
+            navigation.navigate('Products', {
+              screen: 'AddProduct',
+            })
+          }
         />
       </View>
 
@@ -76,7 +86,10 @@ export default function MyProducts() {
           data={myProducts}
           keyExtractor={(item) => item._id}
           renderItem={({ item }) => (
-            <View style={styles.card}>
+            <TouchableOpacity
+              style={styles.card}
+              onPress={() => handleEdit(item._id)}
+            >
               <Text style={styles.name}>{item.name}</Text>
               <Text>${item.price}</Text>
 
@@ -89,7 +102,7 @@ export default function MyProducts() {
                   />
                 </View>
               )}
-            </View>
+            </TouchableOpacity>
           )}
         />
       )}

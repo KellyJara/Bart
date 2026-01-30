@@ -99,6 +99,12 @@ To learn more about React Native, take a look at the following resources:
 utilisateurs pour faire de tests: 
 ingrid@email.com
 123456*
+admin
 
 KellyChatTest@email.com
 123456*
+admin
+
+"email": "MartaOroz@email.com",
+"password": "123456*"
+user

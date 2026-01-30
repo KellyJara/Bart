@@ -13,6 +13,7 @@ import {
   ActivityIndicator,
   ScrollView,
   Button,
+  TouchableOpacity
 } from 'react-native';
 
 // Tipado para los params de la ruta
@@ -128,6 +129,21 @@ const ProductDetailScreen: React.FC = () => {
       <Text style={styles.category}>Categoría: {selectedProduct.category}</Text>
       <Text style={styles.owner}>Dueño: {selectedProduct.owner?.username ?? 'Unknown'}</Text>
       <Text style={styles.owner}>DueñoId: {selectedProduct.owner?._id ?? 'Unknown'}</Text>
+      <View style={styles.sellerAvatarContainer}>
+       <TouchableOpacity
+        onPress={() => {
+        if (selectedProduct.owner?._id) {
+        navigation.navigate('SellerProfile', { sellerId: selectedProduct.owner._id });
+        }
+        }}
+        >
+       <Image
+       source={{ uri: selectedProduct.owner?.profileImg ?? 'https://ui-avatars.com/api/?name=User' }}
+       style={styles.sellerAvatar}
+       resizeMode="cover"
+       />
+       </TouchableOpacity>
+</View>
       <Text style={styles.owner}>UserId: {userId ?? 'Unknown'}</Text>
       <Text style={styles.owner}>productId: {productId ?? 'Unknown'}</Text>
 

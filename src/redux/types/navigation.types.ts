@@ -8,4 +8,7 @@ export type RootStackParamList = {
   Signup: undefined;
   RegisterProduct: undefined;
   ProductDetail: { productId: string };
+  EditProductScreen: undefined;
+  EditProfile:undefined;
+  SellerProfile: {sellerId: string};
 };
