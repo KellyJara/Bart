@@ -15,6 +15,7 @@ import RegisterProductScreen from './src/screens/ProductModule/RegisterProduct';
 import ProductDetailScreen from './src/screens/ProductModule/ProductDetailScreen';
 import ChatScreen from './src/screens/ChatModule/ChatScreen'
 import MessageScreen from './src/screens/ChatModule/MessageScreen';
+import MyProductsScreen from './src/screens/ProductModule/MyProductsScreen'
 
 import { initSocketListeners } from './src/redux/slices/chat/socketListeners';
 
@@ -46,6 +47,11 @@ function ProductsStack() {
         component={RegisterProductScreen}
         options={{ headerShown: false }}
       />
+      <Stack.Screen
+        name="MyProducts"
+        component={MyProductsScreen}
+        options={{ headerShown: false }}
+      />
     </Stack.Navigator>
   );
 }
@@ -74,10 +80,10 @@ function MainTabs() {
         }}
       />
       <Tab.Screen
-        name="AddProductTab"
-        component={RegisterProductScreen}
+        name="My Products"
+        component={MyProductsScreen}
         options={{
-          tabBarLabel: 'New Product', // texto
+          tabBarLabel: 'My Product', // texto
         }}
       />
     </Tab.Navigator>

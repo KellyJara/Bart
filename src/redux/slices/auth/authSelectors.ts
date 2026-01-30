@@ -12,6 +12,7 @@ export const selectIsAdmin = (state: RootState) => state.auth.roles.includes('ad
 
 export const selectIsModerator = (state: RootState) => state.auth.roles.includes('moderator');
 
+
 //Product selector
 export const selectProductOwnerUsernameById =
   (productId: string) =>
@@ -27,3 +28,13 @@ export const selectProductOwnerUsernameById =
   state: RootState
 ): string | null =>
   state.products.selectedProduct?.owner?.username ?? null;
+
+export const selectMyProducts = (state: RootState) => {
+  const userId = state.auth.userId;
+
+  if (!userId) return [];
+
+  return state.products.items.filter(
+    (product) => product.owner?._id === userId
+  );
+};
