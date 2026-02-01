@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import {SafeAreaProvider,} from 'react-native-safe-area-context';
 import { useAppDispatch, useAppSelector } from './src/redux/hooks';
 import { loadToken, loadUserId } from './src/redux/slices/auth/authSlice';
+import { Image } from 'react-native';
 import { AppDispatch } from './src/redux/store';
 import { Provider } from 'react-redux';
 import { NavigationContainer } from '@react-navigation/native';
@@ -93,16 +94,36 @@ function MainTabs() {
         name="Products"
         component={ProductsStack}
         options={{
-          tabBarLabel: 'Products', // texto que aparecerá
-        }}
+        tabBarLabel: 'Products',
+        tabBarIcon: ({ color }) => (
+        <Image
+          source={require('./src/assets/home.png')}
+          style={{
+            width: 24,
+            height: 24,
+            tintColor: color,
+          }}
+        />
+      ),
+    }}
       />
       <Tab.Screen
         name="MessageScreen"
         component={MessageScreen}
         options={{
-          headerShown: true,
-          tabBarLabel: 'Chat', // texto
-        }}
+        headerShown: true,
+        tabBarLabel: 'Chat',
+        tabBarIcon: ({ color }) => (
+        <Image
+          source={require('./src/assets/chat_icon.png')}
+          style={{
+            width: 24,
+            height: 24,
+            tintColor: color,
+          }}
+        />
+      ),
+    }}
       />
       <Tab.Screen
         name="My Products"
@@ -110,6 +131,16 @@ function MainTabs() {
         options={{
           headerShown: true,
           tabBarLabel: 'My Product', // texto
+          tabBarIcon: ({ color }) => (
+        <Image
+          source={require('./src/assets/chat_icon.png')}
+          style={{
+            width: 24,
+            height: 24,
+            tintColor: color,
+          }}
+        />
+          ),
         }}
       />
     </Tab.Navigator>

@@ -59,7 +59,6 @@ const styles = StyleSheet.create({
     borderColor: COLORS.surface,
     backgroundColor: COLORS.surface,
     alignItems: 'center',
-    marginBottom: 200,
   },
 
   input: {
@@ -74,21 +73,18 @@ const styles = StyleSheet.create({
   },
 
   sendButton: {
-  backgroundColor: COLORS.primary,
-  paddingHorizontal: 16,
-  paddingVertical: 10,
-  borderRadius: 8,
-  justifyContent: 'center',
-  alignItems: 'center',
-  marginLeft: 8,
-},
+    backgroundColor: COLORS.primary,
+    paddingVertical: 10,
+    paddingHorizontal: 16,
+    borderRadius: 20,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
 
-sendButtonText: {
-  color: COLORS.white,
-  fontWeight: 'bold',
-  fontSize: 14,
-},
-
+  sendButtonText: {
+    color: COLORS.white,
+    fontWeight: 'bold',
+  },
 });
 
 export default styles;

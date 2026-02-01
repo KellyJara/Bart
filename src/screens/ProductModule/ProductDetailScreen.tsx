@@ -14,7 +14,7 @@ import {
   ScrollView,
   TouchableOpacity,
 } from 'react-native';
-import { COLORS } from '../../styles/Colors'; // Asegúrate de tener tu paleta
+import { COLORS } from '../../styles/Colors'; 
 
 type RouteParams = {
   productId: string;
@@ -99,6 +99,16 @@ const ProductDetailScreen: React.FC = () => {
     );
   }
 
+  const isOwner =
+  !!selectedProduct?.owner?._id &&
+  userId === selectedProduct.owner._id;
+
+const canShowChatButton =
+  !!userId &&
+  !!selectedProduct?.owner?._id &&
+  selectedProduct.owner.username !== 'Unknown' &&
+  !isOwner;
+
   return (
     <ScrollView contentContainerStyle={styles.container}>
       <Image
@@ -139,6 +149,7 @@ const ProductDetailScreen: React.FC = () => {
       </View>
 
       {/* Botón Chat */}
+      {canShowChatButton && (
       <TouchableOpacity
         style={[styles.touchButton, { backgroundColor: COLORS.primary }]}
         activeOpacity={0.7}
@@ -151,6 +162,7 @@ const ProductDetailScreen: React.FC = () => {
           <Text style={styles.touchButtonText}>Chat con vendedor</Text>
         )}
       </TouchableOpacity>
+      )}
     </ScrollView>
   );
 };
