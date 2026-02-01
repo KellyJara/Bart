@@ -1,22 +1,21 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useRoute, useNavigation, NavigationProp } from '@react-navigation/native';
 import { useAppDispatch, useAppSelector } from '../../redux/hooks';
 import { fetchProductById } from '../../redux/slices/product/productSlice';
 import { RootState } from '../../redux/store';
 import { socket } from '../../redux/slices/chat/socket';
 import { addChat } from '../../redux/slices/chat/chatSlice';
-import styles from './styles';
+import styles from "./../../styles/screens/ProductModule/ProductDetailScreen.styles";
 import {
   View,
   Text,
   Image,
   ActivityIndicator,
   ScrollView,
-  Button,
-  TouchableOpacity
+  TouchableOpacity,
 } from 'react-native';
+import { COLORS } from '../../styles/Colors'; // Asegúrate de tener tu paleta
 
-// Tipado para los params de la ruta
 type RouteParams = {
   productId: string;
 };
@@ -27,12 +26,12 @@ const ProductDetailScreen: React.FC = () => {
   const navigation = useNavigation<NavigationProp<any>>();
 
   const { productId } = route.params as RouteParams;
-
   const { selectedProduct, loading, error } = useAppSelector(
     (state: RootState) => state.products
   );
-
   const userId = useAppSelector((state: RootState) => state.auth.userId);
+
+  const [chatLoading, setChatLoading] = useState(false);
 
   // Traer producto
   useEffect(() => {
@@ -43,14 +42,11 @@ const ProductDetailScreen: React.FC = () => {
   useEffect(() => {
     const handleChatCreated = (chat: any) => {
       console.log('Chat creado:', chat);
-
-      // Guardar chat en Redux
       dispatch(addChat(chat));
-
-      // Unirse a la sala
       socket.emit('joinRoom', { chatId: chat.chatId });
 
-      // Navegar al ChatScreen
+      setChatLoading(false);
+
       navigation.navigate('Chat', {
         chatId: chat.chatId,
         sellerName: selectedProduct?.owner?.username ?? 'Vendedor',
@@ -58,7 +54,6 @@ const ProductDetailScreen: React.FC = () => {
     };
 
     socket.on('chatCreated', handleChatCreated);
-
     return () => {
       socket.off('chatCreated', handleChatCreated);
     };
@@ -66,25 +61,13 @@ const ProductDetailScreen: React.FC = () => {
 
   // Crear chat
   const handleCreateChat = () => {
-    if (!selectedProduct) {
-      console.warn('Producto no cargado todavía');
-      return;
-    }
-    if (!userId) {
-      console.warn('Usuario no logueado');
-      return;
-    }
-    const sellerId = selectedProduct.owner?._id;
-    if (!sellerId) {
-      console.warn('Producto sin dueño definido');
-      return;
-    }
-    if (userId === sellerId) {
-      console.warn('No puedes iniciar un chat contigo mismo');
-      return;
-    }
+    if (!selectedProduct || !userId) return;
 
-    // Emitir evento socket
+    const sellerId = selectedProduct.owner?._id;
+    if (!sellerId || userId === sellerId) return;
+
+    setChatLoading(true);
+
     socket.emit('createChat', {
       productId: selectedProduct._id,
       buyerId: userId,
@@ -128,24 +111,22 @@ const ProductDetailScreen: React.FC = () => {
       <Text style={styles.price}>${selectedProduct.price.toFixed(2)}</Text>
       <Text style={styles.category}>Categoría: {selectedProduct.category}</Text>
       <Text style={styles.owner}>Dueño: {selectedProduct.owner?.username ?? 'Unknown'}</Text>
-      <Text style={styles.owner}>DueñoId: {selectedProduct.owner?._id ?? 'Unknown'}</Text>
+
       <View style={styles.sellerAvatarContainer}>
-       <TouchableOpacity
-        onPress={() => {
-        if (selectedProduct.owner?._id) {
-        navigation.navigate('SellerProfile', { sellerId: selectedProduct.owner._id });
-        }
-        }}
+        <TouchableOpacity
+          onPress={() => {
+            if (selectedProduct.owner?._id) {
+              navigation.navigate('SellerProfile', { sellerId: selectedProduct.owner._id });
+            }
+          }}
         >
-       <Image
-       source={{ uri: selectedProduct.owner?.profileImg ?? 'https://ui-avatars.com/api/?name=User' }}
-       style={styles.sellerAvatar}
-       resizeMode="cover"
-       />
-       </TouchableOpacity>
-</View>
-      <Text style={styles.owner}>UserId: {userId ?? 'Unknown'}</Text>
-      <Text style={styles.owner}>productId: {productId ?? 'Unknown'}</Text>
+          <Image
+            source={{ uri: selectedProduct.owner?.profileImg ?? 'https://ui-avatars.com/api/?name=User' }}
+            style={styles.sellerAvatar}
+            resizeMode="cover"
+          />
+        </TouchableOpacity>
+      </View>
 
       <View style={styles.section}>
         <Text style={styles.sectionTitle}>Descripción</Text>
@@ -157,7 +138,19 @@ const ProductDetailScreen: React.FC = () => {
         <Text>Estado: {selectedProduct.isActive ? 'Activo' : 'Inactivo'}</Text>
       </View>
 
-      <Button title="Chat con vendedor" onPress={handleCreateChat} />
+      {/* Botón Chat */}
+      <TouchableOpacity
+        style={[styles.touchButton, { backgroundColor: COLORS.primary }]}
+        activeOpacity={0.7}
+        onPress={handleCreateChat}
+        disabled={chatLoading}
+      >
+        {chatLoading ? (
+          <ActivityIndicator color={COLORS.white} />
+        ) : (
+          <Text style={styles.touchButtonText}>Chat con vendedor</Text>
+        )}
+      </TouchableOpacity>
     </ScrollView>
   );
 };

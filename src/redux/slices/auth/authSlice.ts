@@ -1,7 +1,7 @@
 import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
 import api from '../../api/axios.ts';
 import { AuthResponse, LoginPayload, SignupPayload, AuthState } from '../../types/auth.types.ts';
-import { saveToken, removeToken, getToken } from './authStorage.ts';
+import { saveToken, removeToken, getToken, saveUserId, getUserId, removeUserId } from './authStorage.ts';
 
 /* ---------- LOGIN ---------- */
 export const login = createAsyncThunk<AuthResponse, LoginPayload, { rejectValue: string }>(
@@ -9,10 +9,15 @@ export const login = createAsyncThunk<AuthResponse, LoginPayload, { rejectValue:
   async ({ email, password }, thunkAPI) => {
     try {
       const response = await api.post<AuthResponse>('/auth/signin/', { email, password });
-      await saveToken(response.data.token); // <-- guardamos token en AsyncStorage
+
+      await saveToken(response.data.token);
+      await saveUserId(response.data.userId); // 👈 GUARDAMOS USER ID
+
       return response.data;
     } catch (error: any) {
-      return thunkAPI.rejectWithValue(error.response?.data?.message || 'Error al iniciar sesión');
+      return thunkAPI.rejectWithValue(
+        error.response?.data?.message || 'Error al iniciar sesión'
+      );
     }
   }
 );
@@ -40,6 +45,14 @@ export const loadToken = createAsyncThunk<string | null>(
   }
 );
 
+/* ---------- LOAD USER ID ---------- */
+export const loadUserId = createAsyncThunk<string | null>(
+  'auth/loadUserId',
+  async () => {
+    return await getUserId();
+  }
+);
+
 /* ---------- INITIAL STATE ---------- */
 const initialState: AuthState = {
   token: null,
@@ -58,6 +71,7 @@ const authSlice = createSlice({
       state.token = null;
       state.roles = [];
       removeToken(); // <-- borrar token en logout
+      removeUserId();
     },
   },
   extraReducers: (builder) => {
@@ -94,7 +108,11 @@ const authSlice = createSlice({
       /* LOAD TOKEN */
       .addCase(loadToken.fulfilled, (state, action: PayloadAction<string | null>) => {
         state.token = action.payload;
-      });
+      })
+      /* LOAD USER ID*/
+      .addCase(loadUserId.fulfilled, (state, action) => {
+        state.userId = action.payload;
+});
   },
 });
 

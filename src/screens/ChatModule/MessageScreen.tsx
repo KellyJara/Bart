@@ -12,6 +12,7 @@ import { useAppSelector, useAppDispatch } from '../../redux/hooks';
 import { RootState } from '../../redux/store';
 import { socket } from '../../redux/slices/chat/socket';
 import { setChats, setLoading } from '../../redux/slices/chat/chatSlice';
+import styles from "./../../styles/screens/ChatModule/MessageScreen.styles";
 
 type Chat = {
   chatId: string;
@@ -109,26 +110,5 @@ const MessagesScreen = () => {
     />
   );
 };
-
-const styles = StyleSheet.create({
-  center: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  chatItem: {
-    padding: 16,
-    borderBottomWidth: 1,
-    borderColor: '#eee',
-  },
-  chatTitle: {
-    fontSize: 16,
-    fontWeight: 'bold',
-  },
-  lastMessage: {
-    marginTop: 4,
-    color: '#555',
-  },
-});
 
 export default MessagesScreen;

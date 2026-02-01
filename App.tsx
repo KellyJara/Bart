@@ -1,16 +1,16 @@
 import React, { useEffect } from 'react';
 import {SafeAreaProvider,} from 'react-native-safe-area-context';
 import { useAppDispatch, useAppSelector } from './src/redux/hooks';
-import { loadToken } from './src/redux/slices/auth/authSlice';
+import { loadToken, loadUserId } from './src/redux/slices/auth/authSlice';
 import { AppDispatch } from './src/redux/store';
 import { Provider } from 'react-redux';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 
-import LoginScreen from './src/screens/AuthModule/login';
+import LoginScreen from './src/screens/AuthModule/Login';
 import ProductsScreen from './src/screens/ProductModule/Products';
-import SignUpScreen from './src/screens/AuthModule/signup';
+import SignUpScreen from './src/screens/AuthModule/SignUp';
 import RegisterProductScreen from './src/screens/ProductModule/RegisterProduct';
 import ProductDetailScreen from './src/screens/ProductModule/ProductDetailScreen';
 import ChatScreen from './src/screens/ChatModule/ChatScreen'
@@ -20,7 +20,7 @@ import EditProductScreen from './src/screens/ProductModule/EditProductScreen'
 import EditProfileScreen from './src/screens/ProfileModule/EditProfileScreen'
 import SellerProfileScreen from './src/screens/ProfileModule/SellerProfile';
 import ProfileHeaderLeft from './src/components/ProfileHeaderLeft';
-import LogoutButton from './src/components/headerRight';
+import LogoutButton from './src/components/HeaderRight';
 
 import { initSocketListeners } from './src/redux/slices/chat/socketListeners';
 
@@ -156,6 +156,7 @@ function App() {
 
   useEffect(() => {
     dispatch(loadToken()); // Cargar token guardado al iniciar
+    dispatch(loadUserId());
   }, [dispatch]);
 
   return (

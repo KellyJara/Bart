@@ -18,6 +18,7 @@ import { fetchProductById, updateProduct } from './../../redux/slices/product/pr
 import { updateProductPayload } from './../../redux/types/product.type';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { launchImageLibrary, Asset } from 'react-native-image-picker';
+import styles from "./../../styles/screens/ProductModule/EditProductScreen.styles";
 
 type RootStackParamList = {
   EditProduct: { id: string };
@@ -186,48 +187,5 @@ const EditProductScreen: React.FC<Props> = ({ route, navigation }) => {
     </ScrollView>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    padding: 20,
-    paddingBottom: 40,
-  },
-  input: {
-    borderWidth: 1,
-    borderColor: '#ccc',
-    padding: 10,
-    borderRadius: 5,
-    marginBottom: 15,
-  },
-  textArea: {
-    height: 100,
-    textAlignVertical: 'top',
-  },
-  label: {
-    fontWeight: 'bold',
-    marginBottom: 5,
-  },
-  switchContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginBottom: 20,
-    justifyContent: 'space-between',
-  },
-  loading: {
-    flex: 1,
-    justifyContent: 'center',
-  },
-  error: {
-    color: 'red',
-    textAlign: 'center',
-    marginTop: 20,
-  },
-  imagePreview: {
-    width: '100%',
-    height: 200,
-    marginBottom: 15,
-    borderRadius: 5,
-  },
-});
 
 export default EditProductScreen;

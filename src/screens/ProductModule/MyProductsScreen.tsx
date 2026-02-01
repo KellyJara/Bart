@@ -3,20 +3,19 @@ import {
   View,
   Text,
   FlatList,
-  Button,
   Alert,
-  StyleSheet,
   TouchableOpacity,
 } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigation } from '@react-navigation/native';
-
+import styles from "./../../styles/screens/ProductModule/MyProductsScreen.styles";
 import {
   fetchProducts,
   deleteProduct,
 } from '../../redux/slices/product/productSlice';
 import { selectMyProducts } from '../../redux/slices/auth/authSelectors';
 import { RootState, AppDispatch } from '../../redux/store';
+import {COLORS} from '../../styles/Colors'
 
 export default function MyProducts() {
   const dispatch = useDispatch<AppDispatch>();
@@ -49,11 +48,11 @@ export default function MyProducts() {
   };
 
   const handleEdit = (productId: string) => {
-  navigation.navigate('Products', {
-    screen: 'EditProduct',
-    params: { id: productId }, // 👈 cambiar productId a id
-  });
-};
+    navigation.navigate('Products', {
+      screen: 'EditProduct',
+      params: { id: productId },
+    });
+  };
 
   if (loading) {
     return (
@@ -68,16 +67,14 @@ export default function MyProducts() {
       <Text style={styles.title}>Mis productos</Text>
 
       {/* BOTÓN CREAR PRODUCTO */}
-      <View style={styles.createButton}>
-        <Button
-          title="Crear producto"
-          onPress={() =>
-            navigation.navigate('Products', {
-              screen: 'AddProduct',
-            })
-          }
-        />
-      </View>
+      <TouchableOpacity
+        style={[styles.touchButton, { backgroundColor: COLORS.primary }]}
+        onPress={() =>
+          navigation.navigate('Products', { screen: 'AddProduct' })
+        }
+      >
+        <Text style={styles.touchButtonText}>Crear producto</Text>
+      </TouchableOpacity>
 
       {myProducts.length === 0 ? (
         <Text>No has publicado productos.</Text>
@@ -91,16 +88,15 @@ export default function MyProducts() {
               onPress={() => handleEdit(item._id)}
             >
               <Text style={styles.name}>{item.name}</Text>
-              <Text>${item.price}</Text>
+              <Text style={styles.price}>${item.price}</Text>
 
               {canDelete(item.owner._id) && (
-                <View style={styles.button}>
-                  <Button
-                    title="Eliminar"
-                    color="#d32f2f"
-                    onPress={() => handleDelete(item._id)}
-                  />
-                </View>
+                <TouchableOpacity
+                  style={[styles.touchButton, { backgroundColor: '#FF3B30' }]}
+                  onPress={() => handleDelete(item._id)}
+                >
+                  <Text style={styles.touchButtonText }>Eliminar</Text>
+                </TouchableOpacity>
               )}
             </TouchableOpacity>
           )}
@@ -109,36 +105,3 @@ export default function MyProducts() {
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    padding: 16,
-  },
-  center: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  title: {
-    fontSize: 22,
-    fontWeight: 'bold',
-    marginBottom: 12,
-  },
-  createButton: {
-    marginBottom: 16,
-  },
-  card: {
-    padding: 16,
-    marginBottom: 12,
-    borderRadius: 8,
-    backgroundColor: '#f5f5f5',
-  },
-  name: {
-    fontSize: 16,
-    fontWeight: '600',
-  },
-  button: {
-    marginTop: 10,
-  },
-});

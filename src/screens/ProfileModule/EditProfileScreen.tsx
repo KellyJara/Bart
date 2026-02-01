@@ -15,6 +15,7 @@ import { RootStackParamList } from '../../redux/types/navigation.types';
 import { useAppDispatch, useAppSelector } from '../../redux/hooks';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { updateUserThunk } from '../../redux/slices/user/user';
+import styles from "./../../styles/screens/ProfileModule/EditProfileScreen.style";
 
 type ProductsScreenNavigationProp = NativeStackNavigationProp<
   RootStackParamList,
@@ -119,42 +120,5 @@ const EditProfileScreen: React.FC<EditProfileScreenProps> = ({ navigation }) => 
     </View>
   );
 };
-
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: 'center',
-    paddingTop: 40,
-    backgroundColor: '#fff',
-  },
-  title: {
-    fontSize: 22,
-    fontWeight: 'bold',
-    marginBottom: 30,
-  },
-  avatar: {
-    width: 140,
-    height: 140,
-    borderRadius: 70,
-    marginBottom: 10,
-  },
-  changeText: {
-    textAlign: 'center',
-    color: '#007AFF',
-    marginBottom: 20,
-  },
-  saveButton: {
-    backgroundColor: '#007AFF',
-    paddingVertical: 14,
-    paddingHorizontal: 40,
-    borderRadius: 10,
-  },
-  saveButtonText: {
-    color: '#fff',
-    fontWeight: 'bold',
-    fontSize: 16,
-  },
-});
 
 export default EditProfileScreen;

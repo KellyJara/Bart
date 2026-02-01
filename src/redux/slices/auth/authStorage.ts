@@ -52,3 +52,4 @@ export const removeUserId = async () => {
     console.log('Error removing userId:', error);
   }
 };
+

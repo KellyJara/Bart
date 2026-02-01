@@ -6,7 +6,6 @@ import { Product } from '../../redux/types/product.type';
 import { useAppDispatch, useAppSelector } from '../../redux/hooks';
 import { RootStackParamList } from '../../redux/types/navigation.types';
 import { fetchProducts } from '../../redux/slices/product/productSlice';
-import { logout } from '../../redux/slices/auth/authSlice';
 import {
   View,
   Text,
@@ -17,7 +16,7 @@ import {
   Button,
 } from 'react-native';
 import { getUserProfileThunk } from '../../redux/slices/user/user';
-import styles from './styles';
+import styles from "./../../styles/screens/ProductModule/Products.style";
 
 type ProductsScreenNavigationProp = NativeStackNavigationProp<
   RootStackParamList,
@@ -27,9 +26,6 @@ type ProductsScreenNavigationProp = NativeStackNavigationProp<
 type ProductsScreenProps = {
   navigation: ProductsScreenNavigationProp;
 };
-
-const DEFAULT_AVATAR_URL =
-  'https://ui-avatars.com/api/?name=User&background=0D8ABC&color=fff&size=128';
 
 const ProductsScreen: React.FC<ProductsScreenProps> = ({ navigation }) => {
   const isAdmin = useAppSelector(selectIsAdmin);

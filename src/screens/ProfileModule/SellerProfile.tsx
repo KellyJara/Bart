@@ -13,6 +13,7 @@ import { RootStackParamList } from '../../redux/types/navigation.types';
 import { useAppDispatch, useAppSelector } from '../../redux/hooks';
 import { getSellerProfileThunk } from '../../redux/slices/user/user';
 import { Product } from '../../redux/types/product.type';
+import styles from "./../../styles/screens/ProfileModule/SellerProfileScreen.style";
 
 type Props = NativeStackScreenProps<RootStackParamList, 'SellerProfile'>;
 
@@ -74,69 +75,3 @@ const SellerProfileScreen: React.FC<Props> = ({ route, navigation }) => {
 
 export default SellerProfileScreen;
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-  },
-  center: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  header: {
-    alignItems: 'center',
-    paddingVertical: 20,
-    borderBottomWidth: 1,
-    borderBottomColor: '#eee',
-  },
-  avatar: {
-    width: 100,
-    height: 100,
-    borderRadius: 50,
-    marginBottom: 10,
-  },
-  username: {
-    fontSize: 22,
-    fontWeight: 'bold',
-  },
-  about: {
-    marginTop: 6,
-    fontSize: 14,
-    color: '#555',
-    textAlign: 'center',
-    paddingHorizontal: 20,
-  },
-  sectionTitle: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    marginTop: 20,
-    marginLeft: 16,
-  },
-  productsList: {
-    paddingHorizontal: 16,
-    paddingVertical: 10,
-  },
-  productCard: {
-    marginBottom: 16,
-    borderRadius: 10,
-    overflow: 'hidden',
-    borderWidth: 1,
-    borderColor: '#eee',
-  },
-  productImage: {
-    width: '100%',
-    height: 150,
-  },
-  productName: {
-    fontSize: 16,
-    fontWeight: '600',
-    margin: 8,
-  },
-  productPrice: {
-    fontSize: 14,
-    color: '#007AFF',
-    marginHorizontal: 8,
-    marginBottom: 8,
-  },
-});

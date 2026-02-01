@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import styles from "./../../styles/screens/AuthModule/SignUp.styles";
 
 import {
   View,
@@ -9,7 +10,6 @@ import {
 } from 'react-native';
 import { useAppDispatch, useAppSelector } from '../../redux/hooks';
 import { signup } from '../../redux/slices/auth/authSlice';
-import styles from './styles'
 type SignUpScreenProps = {
   navigation: any;
 };

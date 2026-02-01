@@ -3,11 +3,11 @@ import {
   View,
   Text,
   TextInput,
-  Button,
   Image,
-  StyleSheet,
-  Alert,
   ScrollView,
+  Alert,
+  TouchableOpacity,
+  ActivityIndicator,
 } from 'react-native';
 import { launchImageLibrary, Asset } from 'react-native-image-picker';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
@@ -15,7 +15,8 @@ import { useAppDispatch, useAppSelector } from '../../redux/hooks';
 import { RootStackParamList } from '../../redux/types/navigation.types';
 import { createProduct } from '../../redux/slices/product/productSlice';
 import { CreateProductPayload } from '../../redux/types/product.type';
-import styles from './styles';
+import styles from "./../../styles/screens/ProductModule/RegisterProduct.style";
+import { COLORS } from '../../styles/Colors'; // Asegúrate de tener tu paleta
 
 type RegisterProductScreenNavigationProp = NativeStackNavigationProp<
   RootStackParamList,
@@ -39,7 +40,6 @@ const RegisterProductScreen: React.FC<RegisterProductScreenProps> = ({ navigatio
   const [image, setImage] = useState<Asset | null>(null);
   const [imgURL, setImgURL] = useState('');
 
-  // Seleccionar imagen
   const selectImage = async () => {
     const result = await launchImageLibrary({ mediaType: 'photo', quality: 0.8 });
     if (!result.assets?.length) return;
@@ -56,7 +56,6 @@ const RegisterProductScreen: React.FC<RegisterProductScreenProps> = ({ navigatio
     }
   };
 
-  // Subir imagen a Cloudinary y obtener URL
   const uploadImageToCloudinary = async (asset: Asset) => {
     if (!asset.uri) throw new Error('URI inválido');
 
@@ -67,7 +66,7 @@ const RegisterProductScreen: React.FC<RegisterProductScreenProps> = ({ navigatio
       name: asset.fileName || `product_${Date.now()}.jpg`,
     } as any);
 
-    data.append('upload_preset', 'BartProductImages'); // <-- crear en Cloudinary
+    data.append('upload_preset', 'BartProductImages');
 
     const res = await fetch('https://api.cloudinary.com/v1_1/dzipqea6s/image/upload', {
       method: 'POST',
@@ -75,10 +74,9 @@ const RegisterProductScreen: React.FC<RegisterProductScreenProps> = ({ navigatio
     });
 
     const result = await res.json();
-    return result.secure_url; // 🔹 URL pública de la imagen
+    return result.secure_url;
   };
 
-  // Registrar producto
   const registerProduct = async () => {
     if (!name || !category || !price || !imgURL) {
       Alert.alert('Error', 'Completa todos los campos y selecciona una imagen');
@@ -142,16 +140,31 @@ const RegisterProductScreen: React.FC<RegisterProductScreenProps> = ({ navigatio
         onChangeText={setStock}
       />
 
-      <Button title="Seleccionar Imagen" onPress={selectImage} />
+      {/* Botón Seleccionar Imagen */}
+      <TouchableOpacity
+        style={[styles.touchButton, { backgroundColor: COLORS.primary }]}
+        activeOpacity={0.7}
+        onPress={selectImage}
+      >
+        <Text style={styles.touchButtonText}>Seleccionar Imagen</Text>
+      </TouchableOpacity>
 
       {image?.uri && <Image source={{ uri: image.uri }} style={styles.image} />}
       {imgURL !== '' && <Text style={styles.url}>Imagen subida: {imgURL}</Text>}
 
-      <Button
-        title={loading ? 'Registrando...' : 'Registrar Producto'}
+      {/* Botón Registrar Producto */}
+      <TouchableOpacity
+        style={[styles.touchButton, { backgroundColor: COLORS.primary }]}
+        activeOpacity={0.7}
         onPress={registerProduct}
         disabled={loading}
-      />
+      >
+        {loading ? (
+          <ActivityIndicator color={COLORS.white} />
+        ) : (
+          <Text style={styles.touchButtonText}>Registrar Producto</Text>
+        )}
+      </TouchableOpacity>
     </ScrollView>
   );
 };

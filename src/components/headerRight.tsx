@@ -1,7 +1,7 @@
 import React from 'react';
 import { TouchableOpacity, Text, Alert } from 'react-native';
-import { useAppDispatch } from '../../src/redux/hooks';
-import { logout } from '../../src/redux/slices/auth/authSlice';
+import { useAppDispatch } from '../redux/hooks';
+import { logout } from '../redux/slices/auth/authSlice';
 
 const LogoutButton = ({ navigation }: any) => {
   const dispatch = useAppDispatch();

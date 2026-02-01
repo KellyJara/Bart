@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useAppDispatch, useAppSelector } from '../../redux/hooks';
 import { login } from "../../redux/slices/auth/authSlice";
 import {selectIsConnected} from "../../redux/slices/auth/authSelectors";
-import styles from "./styles";
+import styles from "./../../styles/screens/AuthModule/Login.styles";
 
 import {
   View,
@@ -34,38 +34,6 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ navigation }) => {
       navigation.replace('Main');
     }
   }, [isConnected, navigation]);
-
-  /*try {
-    URL del backend: usa la IP de tu PC en la red Wi-Fi
-    const API_URL = 'http://192.168.1.83:4000/api/auth/signin/';
-
-    const response = await fetch(API_URL, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ email, password }),
-    });
-
-    const data = await response.json();
-
-    // Verifica si hubo respuesta del servidor
-    if (!response.ok) {
-        setErrorMessage(data?.message || `Error ${response.status}: ${response.statusText}`);
-        return;
-      }
-      navigation.replace('Products');
-      console.log('Login exitoso!');
-      console.log('data:', data);
-
-      // Aquí puedes guardar el token o redirigir al usuario
-      // Ejemplo: AsyncStorage.setItem('token', data.token);*/
-/*
-  } catch (error) {
-    console.error('Error de conexión:', error);
-    setErrorMessage('No se pudo conectar con el servidor. ¿Está el teléfono y la PC en la misma red Wi-Fi?');
-  }
-};*/
 
   return (
     <View style={styles.container}>
