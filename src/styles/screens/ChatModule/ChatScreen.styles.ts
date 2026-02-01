@@ -59,6 +59,7 @@ const styles = StyleSheet.create({
     borderColor: COLORS.surface,
     backgroundColor: COLORS.surface,
     alignItems: 'center',
+    marginBottom: 40,
   },
 
   input: {

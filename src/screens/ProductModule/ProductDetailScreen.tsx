@@ -42,7 +42,10 @@ const ProductDetailScreen: React.FC = () => {
   useEffect(() => {
     const handleChatCreated = (chat: any) => {
       console.log('Chat creado:', chat);
-      dispatch(addChat(chat));
+      dispatch(addChat({
+        ...chat,
+        productName:selectedProduct?.name
+      }));
       socket.emit('joinRoom', { chatId: chat.chatId });
 
       setChatLoading(false);
@@ -70,6 +73,7 @@ const ProductDetailScreen: React.FC = () => {
 
     socket.emit('createChat', {
       productId: selectedProduct._id,
+      productName: selectedProduct.name, 
       buyerId: userId,
       sellerId,
     });

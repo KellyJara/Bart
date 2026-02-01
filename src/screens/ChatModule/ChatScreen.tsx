@@ -104,39 +104,39 @@ const ChatScreen: React.FC = () => {
 
   return (
     
-      <KeyboardAvoidingView
-        style={{ flex: 1 }}
-        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+    <KeyboardAvoidingView
+      style={{ flex: 1 }}
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         keyboardVerticalOffset={Platform.OS === 'ios' ? 100 : 0} // Ajusta según tu header
-      >
+    >
         {/* HEADER FIJO */}
-        <Text style={styles.header}>Chat con {sellerName}</Text>
-        
+      <Text style={styles.header}>Chat con {sellerName}</Text>
+
         {/* MENSAJES */}
-        <FlatList
-          ref={flatListRef}
-          data={[...messages].reverse()}
-          keyExtractor={(_, index) => index.toString()}
-          renderItem={renderItem}
-          inverted
-          keyboardShouldPersistTaps="handled"
-          contentContainerStyle={styles.messagesList}
+      <FlatList
+        ref={flatListRef}
+        data={[...messages].reverse()}
+        keyExtractor={(_, index) => index.toString()}
+        renderItem={renderItem}
+        inverted
+        keyboardShouldPersistTaps="handled"
+        contentContainerStyle={styles.messagesList}
           onContentSizeChange={() =>
             flatListRef.current?.scrollToOffset({ offset: 0, animated: true })
           }
-        />
-        <SafeAreaView>
+      />
+      <SafeAreaView>
 
         {/* INPUT */}
         <View style={[styles.inputContainer, { paddingBottom: Platform.OS === 'android' ? 6 : 0 }]}>
           
-          <TextInput
-            style={styles.input}
-            placeholder="Escribe un mensaje..."
-            value={text}
-            onChangeText={setText}
-            multiline
-          />
+            <TextInput
+              style={styles.input}
+              placeholder="Escribe un mensaje..."
+              value={text}
+              onChangeText={setText}
+              multiline
+            />
 
           <TouchableOpacity
             style={styles.sendButton}
@@ -151,8 +151,8 @@ const ChatScreen: React.FC = () => {
             )}
           </TouchableOpacity>
         </View>
-        </SafeAreaView>
-      </KeyboardAvoidingView>
+      </SafeAreaView>
+    </KeyboardAvoidingView>
     
   );
 };

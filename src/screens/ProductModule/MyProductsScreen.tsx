@@ -4,6 +4,7 @@ import {
   Text,
   FlatList,
   Alert,
+  Image,
   TouchableOpacity,
 } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
@@ -80,27 +81,39 @@ export default function MyProducts() {
         <Text>No has publicado productos.</Text>
       ) : (
         <FlatList
-          data={myProducts}
-          keyExtractor={(item) => item._id}
-          renderItem={({ item }) => (
-            <TouchableOpacity
-              style={styles.card}
-              onPress={() => handleEdit(item._id)}
-            >
-              <Text style={styles.name}>{item.name}</Text>
-              <Text style={styles.price}>${item.price}</Text>
+  data={myProducts}
+  keyExtractor={(item) => item._id}
+  renderItem={({ item }) => (
+    <TouchableOpacity
+      style={styles.card}
+      onPress={() => handleEdit(item._id)}
+    >
+      {/* Contenedor horizontal para imagen y texto */}
+      <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+        {item.imgURL && (
+          <Image
+            source={{ uri: item.imgURL }} // URL de la imagen del producto
+            style={{ width: 50, height: 50, borderRadius: 5, marginRight: 10 }}
+            resizeMode="cover"
+          />
+        )}
+        <View>
+          <Text style={styles.name}>{item.name}</Text>
+          <Text style={styles.price}>${item.price}</Text>
+        </View>
+      </View>
 
-              {canDelete(item.owner._id) && (
-                <TouchableOpacity
-                  style={[styles.touchButton, { backgroundColor: '#FF3B30' }]}
-                  onPress={() => handleDelete(item._id)}
-                >
-                  <Text style={styles.touchButtonText }>Eliminar</Text>
-                </TouchableOpacity>
-              )}
-            </TouchableOpacity>
-          )}
-        />
+      {canDelete(item.owner._id) && (
+        <TouchableOpacity
+          style={[styles.touchButton, { backgroundColor: '#FF3B30', marginTop: 5 }]}
+          onPress={() => handleDelete(item._id)}
+        >
+          <Text style={styles.touchButtonText}>Eliminar</Text>
+        </TouchableOpacity>
+      )}
+    </TouchableOpacity>
+  )}
+/>
       )}
     </View>
   );

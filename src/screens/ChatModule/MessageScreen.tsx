@@ -94,7 +94,7 @@ const MessagesScreen = () => {
             onPress={() => openChat(item)}
           >
             <Text style={styles.chatTitle}>
-              Chat producto: {item.productId}
+              Chat producto: {item.productName ?? 'Producto x'}
             </Text>
 
             {lastMessage ? (

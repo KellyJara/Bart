@@ -10,6 +10,7 @@ type Message = {
 type Chat = {
   chatId: string;
   productId: string;
+  productName: string;
   buyerId: string;
   sellerId: string;
   messages: Message[];
