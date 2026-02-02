@@ -4,8 +4,7 @@ import {
   View,
   Text,
   TextInput,
-  Button,
-  StyleSheet,
+  TouchableOpacity,
   Switch,
   ScrollView,
   ActivityIndicator,
@@ -19,10 +18,11 @@ import { updateProductPayload } from './../../redux/types/product.type';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { launchImageLibrary, Asset } from 'react-native-image-picker';
 import styles from "./../../styles/screens/ProductModule/EditProductScreen.styles";
+import { COLORS } from './../../styles/colors';
 
 type RootStackParamList = {
   EditProduct: { id: string };
-  ProductList: undefined;
+  MyProducts: undefined;
 };
 
 type Props = NativeStackScreenProps<RootStackParamList, 'EditProduct'>;
@@ -114,7 +114,7 @@ const EditProductScreen: React.FC<Props> = ({ route, navigation }) => {
     try {
       await dispatch(updateProduct({ id, product: form }));
       Alert.alert('Éxito', 'Producto actualizado correctamente');
-      navigation.navigate('ProductList');
+      navigation.navigate('MyProducts');
     } catch (err) {
       Alert.alert('Error', 'No se pudo actualizar el producto');
     }
@@ -148,16 +148,19 @@ const EditProductScreen: React.FC<Props> = ({ route, navigation }) => {
         keyboardType="numeric"
       />
 
-      <Text style={styles.label}>Imagen:</Text>
-      <Button title="Seleccionar Imagen" onPress={selectImage} />
+      <Text style={styles.label}>Imagen :</Text>
+      <TouchableOpacity onPress={selectImage} activeOpacity={0.8}>
+        <Image
+          source={{
+            uri:
+              selectedImage?.uri ||
+              form.imgURL ||
+              'https://via.placeholder.com/400x300.png?text=Seleccionar+Imagen',
+          }}
+          style={styles.imagePreview}
+        />
+      </TouchableOpacity>
 
-      {selectedImage?.uri && (
-        <Image source={{ uri: selectedImage.uri }} style={styles.imagePreview} />
-      )}
-      {/* Si no seleccionaste nueva imagen, mostrar la existente */}
-      {form.imgURL !== '' && !selectedImage?.uri && (
-        <Image source={{ uri: form.imgURL }} style={styles.imagePreview} />
-      )}
 
       <Text style={styles.label}>Descripción:</Text>
       <TextInput
@@ -183,7 +186,18 @@ const EditProductScreen: React.FC<Props> = ({ route, navigation }) => {
         />
       </View>
 
-      <Button title="Guardar Cambios" onPress={handleSubmit} color="#007bff" />
+      <TouchableOpacity
+        style={[
+          styles.saveButton,
+          loading && { opacity: 0.6 },
+        ]}
+        onPress={handleSubmit}
+        disabled={loading}
+      >
+        <Text style={styles.saveButtonText}>
+          {loading ? 'Guardando...' : 'Guardar Cambios'}
+        </Text>
+      </TouchableOpacity>
     </ScrollView>
   );
 };
