@@ -11,4 +11,5 @@ export type RootStackParamList = {
   EditProductScreen: undefined;
   EditProfile:undefined;
   SellerProfile: {sellerId: string};
+  MyCart: undefined;
 };

@@ -125,6 +125,8 @@ const canShowChatButton =
       <Text style={styles.price}>${selectedProduct.price.toFixed(2)}</Text>
       <Text style={styles.category}>Categoría: {selectedProduct.category}</Text>
       <Text style={styles.owner}>Dueño: {selectedProduct.owner?.username ?? 'Unknown'}</Text>
+      <Text style={styles.owner}>DueñoId: {selectedProduct.owner?._id ?? 'Unknown'}</Text>
+      <Text style={styles.owner}>Usuario: {userId}</Text>
 
       <View style={styles.sellerAvatarContainer}>
         <TouchableOpacity

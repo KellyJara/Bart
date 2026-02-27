@@ -9,7 +9,7 @@ export const fetchFavorites = createAsyncThunk<any[], void, { state: RootState }
   'favorites/fetchFavorites',
   async (_, { rejectWithValue }) => {
     try {
-      const res = await api.get('/favorite'); // Axios ya envía el token desde el interceptor
+      const res = await api.get('/'); // Axios ya envía el token desde el interceptor
       return res.data; // Array de favoritos (ids de productos)
     } catch (error: any) {
       return rejectWithValue(error.response?.data?.message || 'Error fetching favorites');

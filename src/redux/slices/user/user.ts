@@ -1,19 +1,22 @@
-import { createAsyncThunk } from '@reduxjs/toolkit';
+import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import api from '../../api/axios';
-import { createSlice } from '@reduxjs/toolkit';
+
+/* =======================
+   TYPES
+======================= */
 
 interface Role {
   name: string;
 }
 
-interface Product {
+export interface Product {
   _id: string;
   name: string;
   price: number;
   imgURL: string;
 }
 
-interface User {
+export interface User {
   _id: string;
   username: string;
   email: string;
@@ -23,117 +26,104 @@ interface User {
 }
 
 interface UserState {
-  user: User | null;
+  currentUser: User | null;   
   products: Product[];
   loading: boolean;
   error: string | null;
 }
 
 const initialState: UserState = {
-  user: null,
+  currentUser: null,
   products: [],
   loading: false,
   error: null,
 };
 
-interface UpdateUserPayload {
-  userId: string;
-  data: Partial<Pick<User, 'username' | 'email' | 'profileImg' | 'aboutMe'>>;
-}
+/* =======================
+   THUNKS
+======================= */
 
-interface GetUserProfilePayload {
-  userId: string;
-}
-
+// 🔐 Update current user (sale del token)
 export const updateUserThunk = createAsyncThunk(
   'user/updateUser',
-  async ({ userId, data }: UpdateUserPayload, thunkAPI) => {
+  async (
+    data: Partial<Pick<User, 'username' | 'email' | 'profileImg' | 'aboutMe'>>,
+    thunkAPI
+  ) => {
     try {
-      const response = await api.put(`/user/${userId}`, data);
-      return response.data.user; // devolver usuario actualizado
+      const response = await api.put('/user/profile', data);
+      return response.data.user; // 👈 user plano
     } catch (error: any) {
-      return thunkAPI.rejectWithValue(error.response?.data || error.message);
+      return thunkAPI.rejectWithValue(
+        error.response?.data?.message || error.message
+      );
     }
   }
 );
 
+// 🔐 Get current user profile (token)
 export const getUserProfileThunk = createAsyncThunk(
   'user/getUserProfile',
-  async ({ userId }: GetUserProfilePayload, thunkAPI) => {
+  async (_, thunkAPI) => {
     try {
-      const response = await api.get(`/user/${userId}`); // coincide con tu ruta backend
+      const response = await api.get('/user/profile');
       return response.data; // { user, products }
     } catch (error: any) {
-      return thunkAPI.rejectWithValue(error.response?.data || error.message);
+      return thunkAPI.rejectWithValue(
+        error.response?.data?.message || error.message
+      );
     }
   }
 );
 
-export const getSellerProfileThunk = createAsyncThunk(
-  'user/getSellerProfile',
-  async ({ userId }: GetUserProfilePayload, thunkAPI) => {
-    try {
-      const response = await api.get(`/user/${userId}`); // coincide con tu ruta backend
-      return response.data; // { user, products }
-    } catch (error: any) {
-      return thunkAPI.rejectWithValue(error.response?.data || error.message);
-    }
-  }
-);
+/* =======================
+   SLICE
+======================= */
 
 const userSlice = createSlice({
   name: 'user',
   initialState,
   reducers: {
     setUser: (state, action) => {
-      state.user = action.payload;
+      state.currentUser = action.payload;
     },
     clearUser: (state) => {
-      state.user = null;
+      state.currentUser = null;
       state.products = [];
       state.error = null;
     },
   },
   extraReducers: (builder) => {
     builder
+      /* ---------- UPDATE USER ---------- */
       .addCase(updateUserThunk.pending, (state) => {
         state.loading = true;
         state.error = null;
       })
       .addCase(updateUserThunk.fulfilled, (state, action) => {
         state.loading = false;
-        state.user = action.payload;
+        state.currentUser = action.payload;
       })
       .addCase(updateUserThunk.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload as string;
       })
+
+      /* ---------- CURRENT USER PROFILE ---------- */
       .addCase(getUserProfileThunk.pending, (state) => {
         state.loading = true;
         state.error = null;
       })
       .addCase(getUserProfileThunk.fulfilled, (state, action) => {
         state.loading = false;
-        state.user = action.payload.user;
-        state.products = action.payload.products;
+        state.currentUser = action.payload.user;
+        state.products = action.payload.products || [];
       })
       .addCase(getUserProfileThunk.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload as string;
       })
-      .addCase(getSellerProfileThunk.pending, (state,action) =>{
-        state.loading = true;
-        state.error = null;
-      })
-      .addCase(getSellerProfileThunk.fulfilled, (state, action) => {
-        state.loading = false;
-        state.user = action.payload.user;
-        state.products = action.payload.products;
-      })
-      .addCase(getSellerProfileThunk.rejected, (state, action) => {
-        state.loading = false;
-        state.error = action.payload as string;
-      })
+
   },
 });
 

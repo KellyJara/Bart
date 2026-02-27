@@ -15,6 +15,7 @@ import {
   FlatList,
   Image,
   TouchableOpacity,
+  StyleSheet,
 } from 'react-native';
 import { getUserProfileThunk } from '../../redux/slices/user/user';
 import styles from './../../styles/screens/ProductModule/Products.style';
@@ -30,10 +31,8 @@ type ProductsScreenProps = {
 
 const ProductsScreen: React.FC<ProductsScreenProps> = ({ navigation }) => {
   const dispatch = useAppDispatch();
-
   const isAdmin = useAppSelector(selectIsAdmin);
   const userId = useAppSelector((state) => state.auth.userId);
-  
 
   const { items: products, loading: productsLoading } = useAppSelector(
     (state) => state.products
@@ -106,13 +105,33 @@ const ProductsScreen: React.FC<ProductsScreenProps> = ({ navigation }) => {
   // -------------------- Render -------------------- //
   return (
     <View style={{ flex: 1 }}>
+      {/* BOTÓN FLOTANTE DE CARRITO */}
+      <TouchableOpacity
+        style={floatingCartButton}
+        onPress={() => navigation.navigate('MyCart')}
+      >
+        <Image
+          source={require('../../assets/cart.png')}
+          style={{ width: 32, height: 32, tintColor: 'white' }}
+        />
+        {cartItems.length > 0 && (
+          <View style={cartBadge}>
+            <Text style={{ color: 'white', fontWeight: 'bold', fontSize: 12 }}>
+              {cartItems.length}
+            </Text>
+          </View>
+        )}
+      </TouchableOpacity>
+
       <FlatList<Product>
         data={products}
         keyExtractor={(item) => item._id}
         contentContainerStyle={styles.container}
         renderItem={({ item }) => {
           const isFavorite = favoriteItems.includes(item._id);
-          const isInCart = cartItems.some((cartItem) => cartItem.product._id === item._id);
+          const isInCart = cartItems.some(
+            (cartItem) => cartItem.product._id === item._id
+          );
 
           return (
             <TouchableOpacity
@@ -146,7 +165,7 @@ const ProductsScreen: React.FC<ProductsScreenProps> = ({ navigation }) => {
                   />
                 </TouchableOpacity>
 
-                {/* Carrito */}
+                {/* Carrito individual */}
                 <TouchableOpacity
                   onPress={() => handleAddToCart(item)}
                   style={{
@@ -161,7 +180,11 @@ const ProductsScreen: React.FC<ProductsScreenProps> = ({ navigation }) => {
                 >
                   <Image
                     source={require('../../assets/cart.png')}
-                    style={{ width: 32, height: 32, tintColor: isInCart ? 'green' : 'black', }}
+                    style={{
+                      width: 32,
+                      height: 32,
+                      tintColor: isInCart ? 'green' : 'black',
+                    }}
                   />
                 </TouchableOpacity>
               </View>
@@ -189,6 +212,32 @@ const ProductsScreen: React.FC<ProductsScreenProps> = ({ navigation }) => {
       />
     </View>
   );
+};
+
+// -------------------- ESTILOS -------------------- //
+const floatingCartButton = {
+  position: 'absolute' as const,
+  bottom: 16,
+  right: 16,
+  width: 48,
+  height: 48,
+  borderRadius: 24,
+  backgroundColor: '#28A745',
+  alignItems: 'center' as const,
+  justifyContent: 'center' as const,
+  zIndex: 100,
+};
+
+const cartBadge = {
+  position: 'absolute' as const,
+  top: -4,
+  right: -4,
+  width: 18,
+  height: 18,
+  borderRadius: 9,
+  backgroundColor: 'red',
+  alignItems: 'center' as const,
+  justifyContent: 'center' as const,
 };
 
 export default ProductsScreen;

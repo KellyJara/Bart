@@ -5,6 +5,7 @@ import chatReducer from './slices/chat/chatSlice';
 import userReducer from './slices/user/user';
 import cartReducer from './slices/cart/cartSlice'
 import favoriteReducer from './slices/favorite/favoriteSlice';
+import otherUserReducer from './slices/otherUser/otherUser';
 
 export const store = configureStore({
   reducer: {
@@ -12,6 +13,7 @@ export const store = configureStore({
     products: productReducer,
     chats: chatReducer, 
     user: userReducer,
+    otherUser: otherUserReducer,
     cart: cartReducer,
     favorite: favoriteReducer,
   },

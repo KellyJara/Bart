@@ -14,7 +14,8 @@ import ProductsScreen from './src/screens/ProductModule/Products';
 import SignUpScreen from './src/screens/AuthModule/SignUp';
 import RegisterProductScreen from './src/screens/ProductModule/RegisterProduct';
 import ProductDetailScreen from './src/screens/ProductModule/ProductDetailScreen';
-import ChatScreen from './src/screens/ChatModule/ChatScreen'
+import ChatScreen from './src/screens/ChatModule/ChatScreen';
+import MyCart from './src/screens/CartModule/MyCartScreen';
 import MessageScreen from './src/screens/ChatModule/MessageScreen';
 import MyProductsScreen from './src/screens/ProductModule/MyProductsScreen';
 import EditProductScreen from './src/screens/ProductModule/EditProductScreen'
@@ -75,6 +76,11 @@ function ProductsStack() {
       <Stack.Screen
         name="SellerProfile"
         component={SellerProfileScreen}
+        options={{ headerShown: true }}
+      />
+      <Stack.Screen
+        name="MyCart"
+        component={MyCart}
         options={{ headerShown: true }}
       />
     </Stack.Navigator>
@@ -143,6 +149,24 @@ function MainTabs() {
           ),
         }}
       />
+      {/*<Tab.Screen
+        name="MyCart"
+        component={MyCart}
+        options={{
+          headerShown: true,
+          tabBarLabel: 'My Cart', // texto
+          tabBarIcon: ({ color }) => (
+        <Image
+          source={require('./src/assets/chat_icon.png')}
+          style={{
+            width: 24,
+            height: 24,
+            tintColor: color,
+          }}
+        />
+          ),
+        }}
+      />*/}
     </Tab.Navigator>
   );
 }

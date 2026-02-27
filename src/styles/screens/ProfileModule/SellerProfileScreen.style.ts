@@ -1,5 +1,9 @@
 import { COLORS } from "../../Colors";
-import { StyleSheet } from 'react-native';
+import { StyleSheet, Dimensions } from "react-native";
+
+const { width } = Dimensions.get("window");
+const CARD_MARGIN = 10;
+const CARD_WIDTH = (width - 20 * 2 - CARD_MARGIN * 2) / 2; // padding container + spacing between cards
 
 const styles = StyleSheet.create({
   container: {
@@ -8,19 +12,20 @@ const styles = StyleSheet.create({
     padding: 20,
     paddingBottom: 40,
   },
-
   center: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
     backgroundColor: COLORS.background,
   },
-
-  header: {
-    alignItems: 'center',
-    marginBottom: 20,
+  error: {
+    fontSize: 16,
+    color: COLORS.error,
   },
-
+  header: {
+    alignItems: "center",
+    marginBottom: 24,
+  },
   avatar: {
     width: 120,
     height: 120,
@@ -29,61 +34,73 @@ const styles = StyleSheet.create({
     borderColor: COLORS.primary,
     marginBottom: 10,
   },
-
   username: {
     fontSize: 22,
-    fontWeight: 'bold',
+    fontWeight: "bold",
     color: COLORS.primary,
-    marginBottom: 4,
+    marginBottom: 6,
   },
-
-  about: {
+  aboutMe: {
     fontSize: 14,
     color: COLORS.textSecondary,
-    textAlign: 'center',
+    textAlign: "center",
     marginBottom: 16,
   },
-
+  aboutMeEmpty: {
+    fontSize: 14,
+    fontStyle: "italic",
+    color: COLORS.textSecondary,
+    textAlign: "center",
+    marginBottom: 16,
+    opacity: 0.6,
+  },
   sectionTitle: {
     fontSize: 18,
-    fontWeight: 'bold',
+    fontWeight: "bold",
     color: COLORS.primary,
     marginBottom: 12,
   },
-
-  productsList: {
-    paddingBottom: 40,
+  emptyText: {
+    textAlign: "center",
+    color: COLORS.textSecondary,
+    marginTop: 20,
   },
-
+  productList: {
+    paddingBottom: 40,
+    alignItems: "flex-start", // clave para alinear columnas
+  },
   productCard: {
+    width: CARD_WIDTH,
+    height: CARD_WIDTH,
     backgroundColor: COLORS.surface,
     borderRadius: 12,
-    padding: 12,
-    marginBottom: 16,
+    marginBottom: CARD_MARGIN * 2,
+    marginRight: CARD_MARGIN, // separa columnas
     shadowColor: COLORS.black,
     shadowOffset: { width: 0, height: 1 },
     shadowOpacity: 0.1,
     shadowRadius: 2,
     elevation: 2,
+    overflow: "hidden",
   },
-
   productImage: {
-    width: '100%',
-    height: 180,
-    borderRadius: 12,
-    marginBottom: 8,
+    width: "100%",
+    height: "70%", // imagen ocupa el 70% de la tarjeta
   },
-
+  productInfo: {
+    padding: 6,
+    flex: 1,
+    justifyContent: "center",
+  },
   productName: {
-    fontSize: 16,
-    fontWeight: 'bold',
-    color: COLORS.primary,
-    marginBottom: 4,
-  },
-
-  productPrice: {
     fontSize: 14,
+    fontWeight: "bold",
+    color: COLORS.primary,
+  },
+  productPrice: {
+    fontSize: 12,
     color: COLORS.accent,
+    marginTop: 2,
   },
 });
 

@@ -3,75 +3,103 @@ import {
   View,
   Text,
   Image,
+  ActivityIndicator,
   FlatList,
   TouchableOpacity,
-  StyleSheet,
-  ActivityIndicator,
 } from 'react-native';
-import { NativeStackScreenProps } from '@react-navigation/native-stack';
-import { RootStackParamList } from '../../redux/types/navigation.types';
+import { useRoute, useNavigation } from '@react-navigation/native';
 import { useAppDispatch, useAppSelector } from '../../redux/hooks';
-import { getSellerProfileThunk } from '../../redux/slices/user/user';
-import { Product } from '../../redux/types/product.type';
-import styles from "./../../styles/screens/ProfileModule/SellerProfileScreen.style";
+import { fetchOtherUserById, clearOtherUser } from '../../redux/slices/otherUser/otherUser';
+import { RootState } from '../../redux/store';
+import styles from '../../styles/screens/ProfileModule/SellerProfileScreen.style';
 
-type Props = NativeStackScreenProps<RootStackParamList, 'SellerProfile'>;
+type RouteParams = {
+  sellerId: string;
+};
 
-const DEFAULT_AVATAR_URL =
-  'https://ui-avatars.com/api/?name=Seller&background=0D8ABC&color=fff&size=128';
-
-const SellerProfileScreen: React.FC<Props> = ({ route, navigation }) => {
-  const { sellerId } = route.params;
+const SellerProfileScreen: React.FC = () => {
+  const route = useRoute();
+  const navigation = useNavigation();
   const dispatch = useAppDispatch();
 
-  const { user, products, loading } = useAppSelector((state) => state.user);
+  const { sellerId } = route.params as RouteParams;
+
+  const { user, products, loading, error } = useAppSelector(
+    (state: RootState) => state.otherUser
+  );
 
   useEffect(() => {
-    if (sellerId) {
-      dispatch(getSellerProfileThunk({ userId: sellerId }));
-    }
+    dispatch(fetchOtherUserById(sellerId));
+    return () => {
+      dispatch(clearOtherUser());
+    };
   }, [dispatch, sellerId]);
 
-  if (loading || !user) {
+  if (loading) {
     return (
       <View style={styles.center}>
-        <ActivityIndicator size="large" color="#007AFF" />
+        <ActivityIndicator size="large" />
+      </View>
+    );
+  }
+
+  if (error || !user) {
+    return (
+      <View style={styles.center}>
+        <Text style={styles.error}>
+          {error ?? 'No se pudo cargar el perfil'}
+        </Text>
       </View>
     );
   }
 
   return (
     <View style={styles.container}>
-      {/* Header: Imagen de perfil y nombre */}
+      {/* Header */}
       <View style={styles.header}>
         <Image
-          source={{ uri: user.profileImg ?? DEFAULT_AVATAR_URL }}
+          source={{ uri: user.profileImg ?? 'https://ui-avatars.com/api/?name=User' }}
           style={styles.avatar}
         />
         <Text style={styles.username}>{user.username}</Text>
-        {user.aboutMe ? <Text style={styles.about}>{user.aboutMe}</Text> : null}
+        {user.aboutMe ? (
+          <Text style={styles.aboutMe}>{user.aboutMe}</Text>
+        ) : (
+          <Text style={styles.aboutMeEmpty}>Este vendedor no agregó descripción</Text>
+        )}
       </View>
 
-      {/* Lista de productos del vendedor */}
+      {/* Productos */}
       <Text style={styles.sectionTitle}>Productos del vendedor</Text>
-      <FlatList<Product>
-        data={user.products}
-        keyExtractor={(item) => item._id}
-        contentContainerStyle={styles.productsList}
-        renderItem={({ item }) => (
-          <TouchableOpacity
-            style={styles.productCard}
-            onPress={() => navigation.navigate('ProductDetail', { productId: item._id })}
-          >
-            <Image source={{ uri: item.imgURL }} style={styles.productImage} />
-            <Text style={styles.productName}>{item.name}</Text>
-            <Text style={styles.productPrice}>${item.price}</Text>
-          </TouchableOpacity>
-        )}
-      />
+      {products.length === 0 ? (
+        <Text style={styles.emptyText}>Este vendedor no tiene productos publicados</Text>
+      ) : (
+        <FlatList
+  data={products}
+  keyExtractor={(item) => item._id}
+  numColumns={2} // dos por fila
+  contentContainerStyle={styles.productList}
+  renderItem={({ item }) => (
+    <TouchableOpacity
+      style={styles.productCard}
+      activeOpacity={0.8}
+      onPress={() =>
+        navigation.navigate('ProductDetail', { productId: item._id })
+      }
+    >
+      <Image source={{ uri: item.imgURL }} style={styles.productImage} />
+      <View style={styles.productInfo}>
+        <Text style={styles.productName} numberOfLines={1}>
+          {item.name}
+        </Text>
+        <Text style={styles.productPrice}>${item.price.toFixed(2)}</Text>
+      </View>
+    </TouchableOpacity>
+  )}
+/>
+      )}
     </View>
   );
 };
 
 export default SellerProfileScreen;
-
