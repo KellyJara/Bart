@@ -3,8 +3,6 @@ import {SafeAreaProvider,} from 'react-native-safe-area-context';
 import { useAppDispatch, useAppSelector } from './src/redux/hooks';
 import { loadToken, loadUserId } from './src/redux/slices/auth/authSlice';
 import { Image } from 'react-native';
-import { AppDispatch } from './src/redux/store';
-import { Provider } from 'react-redux';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
@@ -23,6 +21,8 @@ import EditProfileScreen from './src/screens/ProfileModule/EditProfileScreen'
 import SellerProfileScreen from './src/screens/ProfileModule/SellerProfile';
 import ProfileHeaderLeft from './src/components/ProfileHeaderLeft';
 import LogoutButton from './src/components/HeaderRight';
+
+import { COLORS } from './src/styles/Colors'; 
 
 import { initSocketListeners } from './src/redux/slices/chat/socketListeners';
 
@@ -93,7 +93,20 @@ function MainTabs() {
     <Tab.Navigator
       screenOptions={{
         headerShown: false,
-        tabBarLabelStyle: { fontSize: 16, fontWeight: 'bold' }, // opcional: estilo del texto
+        tabBarShowLabel: false,
+
+        tabBarActiveTintColor: COLORS.primary,     // TAB SELECCIONADO
+        tabBarInactiveTintColor: COLORS.textSecondary, // TAB NO SELECCIONADO
+
+        tabBarStyle: {
+          backgroundColor: COLORS.background,
+          borderTopColor: COLORS.surface,
+        },
+
+        tabBarLabelStyle: {
+          fontSize: 14,
+          fontWeight: 'bold',
+        },
       }}
     >
       <Tab.Screen
@@ -139,7 +152,7 @@ function MainTabs() {
           tabBarLabel: 'My Product', // texto
           tabBarIcon: ({ color }) => (
         <Image
-          source={require('./src/assets/chat_icon.png')}
+          source={require('./src/assets/shop_icon.png')}
           style={{
             width: 24,
             height: 24,

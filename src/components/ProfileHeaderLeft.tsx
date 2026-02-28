@@ -3,7 +3,7 @@ import { View, Text, Image, TouchableOpacity } from 'react-native';
 import { useAppSelector } from '../../src/redux/hooks';
 
 const DEFAULT_AVATAR_URL =
-  'https://ui-avatars.com/api/?name=User&background=0D8ABC&color=fff&size=128';
+  'https://cdn-icons-png.flaticon.com/512/149/149071.png';
 
 const ProfileHeaderLeft = ({ navigation }: any) => {
   const { user } = useAppSelector(state => state.user);
