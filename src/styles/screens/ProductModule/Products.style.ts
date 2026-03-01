@@ -22,7 +22,7 @@ const styles = StyleSheet.create({
 
   image: {
     width: '100%',
-    height:250,
+    aspectRatio: 1,
     borderRadius: 12,
     marginBottom: 12,
   },
@@ -59,6 +59,31 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     fontSize: 16,
   },
+
+  floatingCartButton : {
+  position: 'absolute' as const,
+  bottom: 16,
+  right: 16,
+  width: 48,
+  height: 48,
+  borderRadius: 24,
+  backgroundColor: '#28A745',
+  alignItems: 'center' as const,
+  justifyContent: 'center' as const,
+  zIndex: 100,
+},
+
+cartBadge : {
+  position: 'absolute' as const,
+  top: -4,
+  right: -4,
+  width: 18,
+  height: 18,
+  borderRadius: 9,
+  backgroundColor: 'red',
+  alignItems: 'center' as const,
+  justifyContent: 'center' as const,
+},
 });
 
 export default styles;

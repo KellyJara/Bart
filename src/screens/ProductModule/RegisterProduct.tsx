@@ -150,7 +150,6 @@ const RegisterProductScreen: React.FC<RegisterProductScreenProps> = ({ navigatio
       </TouchableOpacity>
 
       {image?.uri && <Image source={{ uri: image.uri }} style={styles.image} />}
-      {imgURL !== '' && <Text style={styles.url}>Imagen subida: {imgURL}</Text>}
 
       {/* Botón Registrar Producto */}
       <TouchableOpacity

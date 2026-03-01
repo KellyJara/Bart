@@ -47,12 +47,12 @@ const initialState: UserState = {
 export const updateUserThunk = createAsyncThunk(
   'user/updateUser',
   async (
-    data: Partial<Pick<User, 'username' | 'email' | 'profileImg' | 'aboutMe'>>,
+    { userId, data }: { userId: string; data: Partial<Pick<User, 'username' | 'email' | 'profileImg' | 'aboutMe'>> },
     thunkAPI
   ) => {
     try {
-      const response = await api.put('/user/profile', data);
-      return response.data.user; // 👈 user plano
+      const response = await api.put(`/user/${userId}`, data); // <-- aquí va el ID
+      return response.data.user; // usuario actualizado
     } catch (error: any) {
       return thunkAPI.rejectWithValue(
         error.response?.data?.message || error.message

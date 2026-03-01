@@ -126,7 +126,7 @@ function MainTabs() {
       ),
     }}
       />
-      <Tab.Screen
+      {/*<Tab.Screen
         name="MessageScreen"
         component={MessageScreen}
         options={{
@@ -143,7 +143,7 @@ function MainTabs() {
         />
       ),
     }}
-      />
+      />*/}
       <Tab.Screen
         name="My Products"
         component={MyProductsScreen}

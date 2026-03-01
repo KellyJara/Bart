@@ -1,23 +1,14 @@
 import React, { useEffect } from 'react';
-import { deleteProduct } from '../../redux/slices/product/productSlice';
+import { View, Text, FlatList, Image, TouchableOpacity, Alert } from 'react-native';
+import { useAppDispatch, useAppSelector } from '../../redux/hooks';
+import { addToCart, fetchCart, removeFromCart } from '../../redux/slices/cart/cartSlice';
+import { deleteProduct, fetchProducts } from '../../redux/slices/product/productSlice';
+import { fetchFavorites, toggleFavorite } from '../../redux/slices/favorite/favoriteSlice';
+import { getUserProfileThunk } from '../../redux/slices/user/user';
 import { selectIsAdmin } from '../../redux/slices/auth/authSelectors';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { Product } from '../../redux/types/product.type';
-import { addToCart, fetchCart } from '../../redux/slices/cart/cartSlice';
-import { fetchFavorites, toggleFavorite } from '../../redux/slices/favorite/favoriteSlice';
-import { useAppDispatch, useAppSelector } from '../../redux/hooks';
 import { RootStackParamList } from '../../redux/types/navigation.types';
-import { fetchProducts } from '../../redux/slices/product/productSlice';
-import {
-  View,
-  Text,
-  Alert,
-  FlatList,
-  Image,
-  TouchableOpacity,
-  StyleSheet,
-} from 'react-native';
-import { getUserProfileThunk } from '../../redux/slices/user/user';
 import styles from './../../styles/screens/ProductModule/Products.style';
 
 type ProductsScreenNavigationProp = NativeStackNavigationProp<
@@ -34,15 +25,9 @@ const ProductsScreen: React.FC<ProductsScreenProps> = ({ navigation }) => {
   const isAdmin = useAppSelector(selectIsAdmin);
   const userId = useAppSelector((state) => state.auth.userId);
 
-  const { items: products, loading: productsLoading } = useAppSelector(
-    (state) => state.products
-  );
-  const { items: cartItems, loading: cartLoading } = useAppSelector(
-    (state) => state.cart
-  );
-  const { items: favoriteItems, loading: favoritesLoading } = useAppSelector(
-    (state) => state.favorite
-  );
+  const { items: products, loading: productsLoading } = useAppSelector(state => state.products);
+  const { items: cartItems, loading: cartLoading } = useAppSelector(state => state.cart);
+  const { items: favoriteItems } = useAppSelector(state => state.favorite);
 
   // -------------------- Cargar datos al inicio -------------------- //
   useEffect(() => {
@@ -51,14 +36,10 @@ const ProductsScreen: React.FC<ProductsScreenProps> = ({ navigation }) => {
       dispatch(fetchCart());
       dispatch(fetchFavorites());
     }
+    dispatch(fetchProducts());
   }, [dispatch, userId]);
 
-  useEffect(() => {
-    dispatch(fetchProducts());
-  }, [dispatch]);
-
-  // -------------------- Acciones -------------------- //
-
+  // -------------------- Handlers -------------------- //
   const handleDelete = (id: string) => {
     Alert.alert(
       'Eliminar producto',
@@ -81,56 +62,66 @@ const ProductsScreen: React.FC<ProductsScreenProps> = ({ navigation }) => {
     );
   };
 
-  const handleAddToCart = async (product: Product) => {
-    try {
-      await dispatch(addToCart(product._id)).unwrap();
-      Alert.alert('🛒 Carrito', `${product.name} agregado al carrito`);
-    } catch (err: any) {
-      Alert.alert('Error', err || 'No se pudo agregar el producto al carrito');
-    }
-  };
-
   const handleToggleFavorite = async (productId: string) => {
     try {
       await dispatch(toggleFavorite(productId)).unwrap();
-    } catch (err: any) {
-      Alert.alert('Error', err || 'No se pudo actualizar favoritos');
+    } catch (err) {
+      Alert.alert('Error', 'No se pudo actualizar favoritos');
     }
   };
 
-  if (productsLoading) {
-    return <Text style={{ padding: 16 }}>Cargando productos...</Text>;
-  }
+  const handleToggleCart = async (product: Product) => {
+    const isInCart = cartItems.some(
+      (cartItem) => cartItem.product && cartItem.product._id === product._id
+    );
+
+    try {
+      if (isInCart) {
+        await dispatch(removeFromCart(product._id)).unwrap();
+      } else {
+        await dispatch(addToCart(product._id)).unwrap();
+      }
+    } catch (err) {
+      Alert.alert('Error', 'No se pudo actualizar el carrito');
+    }
+  };
+
+  if (productsLoading) return <Text style={{ padding: 16 }}>Cargando productos...</Text>;
+
+  // -------------------- Filtrar productos del usuario actual -------------------- //
+  const productsToShow = products.filter(
+    (product) => product.owner?._id !== userId
+  );
 
   // -------------------- Render -------------------- //
   return (
     <View style={{ flex: 1 }}>
       {/* BOTÓN FLOTANTE DE CARRITO */}
       <TouchableOpacity
-        style={floatingCartButton}
+        style={styles.floatingCartButton}
         onPress={() => navigation.navigate('MyCart')}
       >
         <Image
           source={require('../../assets/cart.png')}
           style={{ width: 32, height: 32, tintColor: 'white' }}
         />
-        {cartItems.length > 0 && (
+        {/*{Array.isArray(cartItems) && cartItems.length > 0 && (
           <View style={cartBadge}>
             <Text style={{ color: 'white', fontWeight: 'bold', fontSize: 12 }}>
               {cartItems.length}
             </Text>
           </View>
-        )}
+        )}*/}
       </TouchableOpacity>
 
       <FlatList<Product>
-        data={products}
-        keyExtractor={(item) => item._id}
+        data={productsToShow}
+        keyExtractor={item => item._id}
         contentContainerStyle={styles.container}
         renderItem={({ item }) => {
           const isFavorite = favoriteItems.includes(item._id);
           const isInCart = cartItems.some(
-            (cartItem) => cartItem.product._id === item._id
+            (cartItem) => cartItem.product && cartItem.product._id === item._id
           );
 
           return (
@@ -140,9 +131,9 @@ const ProductsScreen: React.FC<ProductsScreenProps> = ({ navigation }) => {
                 navigation.navigate('ProductDetail', { productId: item._id })
               }
             >
-              {/* Imagen principal del producto */}
+              {/* Imagen principal */}
               <View style={{ position: 'relative' }}>
-                <Image source={{ uri: item.imgURL }} style={styles.image} />
+                <Image source={{ uri: item.imgURL }} style={[styles.image, { aspectRatio: 1 }]} />
 
                 {/* Corazón */}
                 <TouchableOpacity
@@ -167,7 +158,7 @@ const ProductsScreen: React.FC<ProductsScreenProps> = ({ navigation }) => {
 
                 {/* Carrito individual */}
                 <TouchableOpacity
-                  onPress={() => handleAddToCart(item)}
+                  onPress={() => handleToggleCart(item)}
                   style={{
                     position: 'absolute',
                     top: 8,
@@ -189,7 +180,7 @@ const ProductsScreen: React.FC<ProductsScreenProps> = ({ navigation }) => {
                 </TouchableOpacity>
               </View>
 
-              {/* Info */}
+              {/* Info del producto */}
               <Text style={styles.name}>{item.name}</Text>
               <Text style={styles.price}>${item.price}</Text>
               <Text style={styles.price}>{item.owner?.username}</Text>
@@ -214,30 +205,5 @@ const ProductsScreen: React.FC<ProductsScreenProps> = ({ navigation }) => {
   );
 };
 
-// -------------------- ESTILOS -------------------- //
-const floatingCartButton = {
-  position: 'absolute' as const,
-  bottom: 16,
-  right: 16,
-  width: 48,
-  height: 48,
-  borderRadius: 24,
-  backgroundColor: '#28A745',
-  alignItems: 'center' as const,
-  justifyContent: 'center' as const,
-  zIndex: 100,
-};
-
-const cartBadge = {
-  position: 'absolute' as const,
-  top: -4,
-  right: -4,
-  width: 18,
-  height: 18,
-  borderRadius: 9,
-  backgroundColor: 'red',
-  alignItems: 'center' as const,
-  justifyContent: 'center' as const,
-};
 
 export default ProductsScreen;

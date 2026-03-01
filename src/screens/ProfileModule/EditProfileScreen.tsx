@@ -31,7 +31,7 @@ const DEFAULT_AVATAR_URL =
 
 const EditProfileScreen: React.FC<EditProfileScreenProps> = ({ navigation }) => {
   const dispatch = useAppDispatch();
-  const user = useAppSelector((state) => state.user.user);
+  const user = useAppSelector((state) => state.user.currentUser);
   const loading = useAppSelector((state) => state.user.loading);
 
   const [profileImage, setProfileImage] = useState<string>(
@@ -65,22 +65,23 @@ const EditProfileScreen: React.FC<EditProfileScreenProps> = ({ navigation }) => 
 
   // Guardar cambios en Redux / backend
   const saveProfile = async () => {
-    if (!user) return;
+  if (!user) return;
 
-    try {
-      await dispatch(
-        updateUserThunk({
-          userId: user._id,
-          data: { profileImg: profileImage, aboutMe },
-        })
-      ).unwrap();
+  try {
+    await dispatch(
+      updateUserThunk({
+        userId: user._id, // <-- pasa el ID del usuario
+        data: { profileImg: profileImage, aboutMe }
+      })
+    ).unwrap();
 
-      Alert.alert('Éxito', 'Perfil actualizado correctamente');
-      navigation.goBack();
-    } catch (error: any) {
-      Alert.alert('Error', error.message || 'No se pudo actualizar el perfil');
-    }
-  };
+    Alert.alert('Éxito', 'Perfil actualizado correctamente');
+    navigation.goBack();
+  } catch (error: any) {
+    console.log('Error updateProfile:', error);
+    Alert.alert('Error', error.message || 'No se pudo actualizar el perfil');
+  }
+};
 
   return (
     <View style={styles.container}>

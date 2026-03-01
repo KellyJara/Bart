@@ -50,7 +50,7 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ navigation }) => {
 
       <TextInput
         style={styles.input}
-        placeholder="Password"
+        placeholder="Contraseña"
         secureTextEntry
         value={password}
         onChangeText={setPassword}

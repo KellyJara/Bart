@@ -6,7 +6,7 @@ const DEFAULT_AVATAR_URL =
   'https://cdn-icons-png.flaticon.com/512/149/149071.png';
 
 const ProfileHeaderLeft = ({ navigation }: any) => {
-  const { user } = useAppSelector(state => state.user);
+  const user = useAppSelector(state => state.user.currentUser);
 
   return (
     <TouchableOpacity

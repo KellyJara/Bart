@@ -10,6 +10,7 @@ import {
 } from 'react-native';
 import { useAppDispatch, useAppSelector } from '../../redux/hooks';
 import { signup } from '../../redux/slices/auth/authSlice';
+
 type SignUpScreenProps = {
   navigation: any;
 };
@@ -21,19 +22,53 @@ const SignUpScreen: React.FC<SignUpScreenProps> = ({ navigation }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
-  const handleSignUp = async () => {
-  try {
-    await dispatch(
-      signup({ username, email, password })
-    ).unwrap();
+  const [emailValid, setEmailValid] = useState(true);
+  const [passwordStrength, setPasswordStrength] = useState('');
 
-    // ✅ Si llega aquí, el registro fue exitoso
-    navigation.replace('Login');
-  } catch (err) {
-    // ❌ Error ya manejado en Redux (state.auth.error)
-    console.log('Error en signup:', err);
-  }
-};
+  // Validación de email en tiempo real
+  const handleEmailChange = (text: string) => {
+    setEmail(text);
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    setEmailValid(emailRegex.test(text));
+  };
+
+  // Validación de contraseña
+  const handlePasswordChange = (text: string) => {
+    setPassword(text);
+
+    // Validación de fortaleza
+    const hasUpperCase = /[A-Z]/.test(text);
+    const hasLowerCase = /[a-z]/.test(text);
+    const hasNumber = /[0-9]/.test(text);
+    const hasSpecial = /[!@#$%^&*]/.test(text);
+    const minLength = text.length >= 8;
+
+    if (!minLength) setPasswordStrength('Muy corta (mínimo 8 caracteres)');
+    else if (!hasUpperCase || !hasLowerCase || !hasNumber || !hasSpecial)
+      setPasswordStrength('Débil: debe incluir mayúscula, minúscula, número y símbolo');
+    else setPasswordStrength('Segura ✅');
+  };
+
+  const handleSignUp = async () => {
+    if (!emailValid) {
+      alert('Ingresa un correo válido');
+      return;
+    }
+    if (passwordStrength !== 'Segura ✅') {
+      alert('La contraseña no es segura');
+      return;
+    }
+
+    try {
+      await dispatch(
+        signup({ username, email, password })
+      ).unwrap();
+
+      navigation.replace('Login');
+    } catch (err) {
+      console.log('Error en signup:', err);
+    }
+  };
 
   return (
     <View style={styles.container}>
@@ -52,16 +87,18 @@ const SignUpScreen: React.FC<SignUpScreenProps> = ({ navigation }) => {
         autoCapitalize="none"
         keyboardType="email-address"
         value={email}
-        onChangeText={setEmail}
+        onChangeText={handleEmailChange}
       />
+      {!emailValid && <Text style={styles.error}>Correo inválido</Text>}
 
       <TextInput
         style={styles.input}
         placeholder="Contraseña"
         secureTextEntry
         value={password}
-        onChangeText={setPassword}
+        onChangeText={handlePasswordChange}
       />
+      {password && <Text style={styles.error}>{passwordStrength}</Text>}
 
       {error && <Text style={styles.error}>{error}</Text>}
 

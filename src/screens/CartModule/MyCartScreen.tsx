@@ -43,36 +43,41 @@ const MyCartScreen: React.FC = () => {
     return <Text style={{ padding: 16 }}>Error: {error}</Text>;
   }
 
-  if (cartItems.length === 0) {
+  if (!cartItems || cartItems.length === 0) {
     return <Text style={{ padding: 16 }}>Tu carrito está vacío 😢</Text>;
   }
 
   return (
     <View style={{ flex: 1, padding: 16 }}>
       <FlatList
-        data={cartItems}
-        keyExtractor={(item) => item.product._id}
-        renderItem={({ item }) => (
-          <View style={styles.card}>
-            {/* Imagen */}
-            <Image source={{ uri: item.product.imgURL }} style={styles.image} />
+        data={cartItems.filter(item => item.product)} // ⚡ filtrar productos nulos
+        keyExtractor={(item) => item.product?._id || Math.random().toString()}
+        renderItem={({ item }) => {
+          const product = item.product;
+          if (!product) return null; // protección extra
 
-            {/* Info */}
-            <View style={{ flex: 1, marginLeft: 8 }}>
-              <Text style={styles.name}>{item.product.name}</Text>
-              <Text style={styles.price}>${item.product.price}</Text>
-              <Text>Cantidad: {item.quantity}</Text>
+          return (
+            <View style={styles.card}>
+              {/* Imagen */}
+              <Image source={{ uri: product.imgURL }} style={[styles.image, { aspectRatio: 1 }]} />
+
+              {/* Info */}
+              <View style={{ flex: 1, marginLeft: 8 }}>
+                <Text style={styles.name}>{product.name}</Text>
+                <Text style={styles.price}>${product.price}</Text>
+                <Text>Cantidad: {item.quantity}</Text>
+              </View>
+
+              {/* Botón eliminar */}
+              <TouchableOpacity
+                style={[styles.button, { backgroundColor: '#FF3B30' }]}
+                onPress={() => handleRemoveFromCart(product._id)}
+              >
+                <Text style={styles.buttonText}>Quitar</Text>
+              </TouchableOpacity>
             </View>
-
-            {/* Botón eliminar */}
-            <TouchableOpacity
-              style={[styles.button, { backgroundColor: '#FF3B30' }]}
-              onPress={() => handleRemoveFromCart(item.product._id)}
-            >
-              <Text style={styles.buttonText}>Quitar</Text>
-            </TouchableOpacity>
-          </View>
-        )}
+          );
+        }}
         contentContainerStyle={{ paddingBottom: 16 }}
       />
     </View>

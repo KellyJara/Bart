@@ -42,7 +42,7 @@ const styles = StyleSheet.create({
 
   imagePreview: {
     width: '100%',
-    height: 300,
+    aspectRatio: 1,
     marginBottom: 15,
     borderRadius: 12,
     backgroundColor: COLORS.surface,
