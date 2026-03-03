@@ -12,4 +12,5 @@ export type RootStackParamList = {
   EditProfile:undefined;
   SellerProfile: {sellerId: string};
   MyCart: undefined;
+  UnderConstruction: undefined;
 };

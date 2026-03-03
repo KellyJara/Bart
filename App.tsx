@@ -7,8 +7,8 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 
-import LoginScreen from './src/screens/AuthModule/Login';
-import ProductsScreen from './src/screens/ProductModule/Products';
+import LoginScreen from './src/screens/AuthModule/login';
+import ProductsScreen from './src/screens/ProductModule/products';
 import SignUpScreen from './src/screens/AuthModule/SignUp';
 import RegisterProductScreen from './src/screens/ProductModule/RegisterProduct';
 import ProductDetailScreen from './src/screens/ProductModule/ProductDetailScreen';
@@ -25,6 +25,7 @@ import LogoutButton from './src/components/HeaderRight';
 import { COLORS } from './src/styles/Colors'; 
 
 import { initSocketListeners } from './src/redux/slices/chat/socketListeners';
+import UnderConstructionScreen from './src/screens/UnderConstructionScreen';
 
 
 const Stack = createNativeStackNavigator();
@@ -83,6 +84,11 @@ function ProductsStack() {
         component={MyCart}
         options={{ headerShown: true }}
       />
+      <Stack.Screen
+       name="UnderConstruction"
+       component={UnderConstructionScreen}
+      options={{ headerShown: true, title: 'En construcción' }}
+     />
     </Stack.Navigator>
   );
 }

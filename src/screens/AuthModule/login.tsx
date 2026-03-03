@@ -66,7 +66,6 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ navigation }) => {
 
       {loading && <Text>Cargando...</Text>}
       {error && <Text style={{color: 'red'}}>{error}</Text>}
-      {token && <Text>Token recibido: {token}</Text>}
 
       <View style={styles.registerContainer}>
        <Text style={styles.registerText}>¿No tienes cuenta?</Text>
