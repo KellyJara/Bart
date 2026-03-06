@@ -1,4 +1,4 @@
-package com.bart
+package com.kellyjaramillo.bart
 
 import com.facebook.react.ReactActivity
 import com.facebook.react.ReactActivityDelegate

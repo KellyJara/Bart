@@ -9,7 +9,7 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 
 import LoginScreen from './src/screens/AuthModule/login';
 import ProductsScreen from './src/screens/ProductModule/products';
-import SignUpScreen from './src/screens/AuthModule/SignUp';
+import SignUpScreen from './src/screens/AuthModule/signup';
 import RegisterProductScreen from './src/screens/ProductModule/RegisterProduct';
 import ProductDetailScreen from './src/screens/ProductModule/ProductDetailScreen';
 import ChatScreen from './src/screens/ChatModule/ChatScreen';

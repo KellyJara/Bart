@@ -1,4 +1,4 @@
-package com.bart
+package com.kellyjaramillo.bart
 
 import android.app.Application
 import com.facebook.react.PackageList
