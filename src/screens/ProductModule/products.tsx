@@ -105,7 +105,7 @@ const ProductsScreen: React.FC<ProductsScreenProps> = ({ navigation }) => {
           source={require('../../assets/cart.png')}
           style={{ width: 32, height: 32, tintColor: 'white' }}
         />
-        {/*{Array.isArray(cartItems) && cartItems.length > 0 && (
+       {/* {Array.isArray(cartItems) && cartItems.length > 0 && (
           <View style={cartBadge}>
             <Text style={{ color: 'white', fontWeight: 'bold', fontSize: 12 }}>
               {cartItems.length}
@@ -184,10 +184,6 @@ const ProductsScreen: React.FC<ProductsScreenProps> = ({ navigation }) => {
               <Text style={styles.name}>{item.name}</Text>
               <Text style={styles.price}>${item.price}</Text>
               <Text style={styles.price}>{item.owner?.username}</Text>
-
-              <TouchableOpacity style={styles.button}>
-                <Text style={styles.buttonText}>Comprar o intercambiar</Text>
-              </TouchableOpacity>
 
               {isAdmin && (
                 <TouchableOpacity

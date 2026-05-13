@@ -7,6 +7,7 @@ import {
   TextInput,
   StyleSheet,
   Alert,
+  FlatList,
   ActivityIndicator,
 } from 'react-native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
@@ -15,6 +16,7 @@ import { RootStackParamList } from '../../redux/types/navigation.types';
 import { useAppDispatch, useAppSelector } from '../../redux/hooks';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { updateUserThunk } from '../../redux/slices/user/user';
+import { toggleFavorite } from '../../redux/slices/favorite/favoriteSlice';
 import styles from "./../../styles/screens/ProfileModule/EditProfileScreen.style";
 
 type ProductsScreenNavigationProp = NativeStackNavigationProp<
@@ -33,11 +35,17 @@ const EditProfileScreen: React.FC<EditProfileScreenProps> = ({ navigation }) => 
   const dispatch = useAppDispatch();
   const user = useAppSelector((state) => state.user.currentUser);
   const loading = useAppSelector((state) => state.user.loading);
+  const favorites = useAppSelector((state) => state.favorite.items);
+  const products = useAppSelector((state) => state.products.items);
 
   const [profileImage, setProfileImage] = useState<string>(
     user?.profileImg || DEFAULT_AVATAR_URL
   );
   const [aboutMe, setAboutMe] = useState<string>(user?.aboutMe || '');
+
+  const favoriteProducts = products.filter((p) =>
+  favorites.includes(p._id)
+  );
 
   // Seleccionar imagen del dispositivo
   const pickImage = () => {
@@ -110,6 +118,41 @@ const EditProfileScreen: React.FC<EditProfileScreenProps> = ({ navigation }) => 
           marginBottom: 20,
         }}
       />
+
+      <View style={{ marginTop: 30, width: '100%' }}>
+  <Text style={{ fontSize: 18, fontWeight: 'bold', marginBottom: 10 }}>
+    Mis favoritos
+  </Text>
+
+  {favoriteProducts.length === 0 ? (
+    <Text>No tienes productos favoritos</Text>
+  ) : (
+    <FlatList
+      data={favoriteProducts}
+      keyExtractor={(item) => item._id}
+      renderItem={({ item }) => (
+        <View style={styles.favoriteCard}>
+          <Image
+            source={{ uri: item.imgURL }}
+            style={{ width: 50, height: 50, borderRadius: 8 }}
+          />
+
+          <View style={{ flex: 1, marginLeft: 10 }}>
+            <Text>{item.name}</Text>
+            <Text>${item.price}</Text>
+          </View>
+
+          {/* BOTÓN ELIMINAR FAVORITO */}
+          <TouchableOpacity
+            onPress={() => dispatch(toggleFavorite(item._id))}
+          >
+            <Text style={{ color: 'red' }}>✕</Text>
+          </TouchableOpacity>
+        </View>
+      )}
+    />
+  )}
+</View>
 
       <TouchableOpacity style={styles.saveButton} onPress={saveProfile} disabled={loading}>
         {loading ? (

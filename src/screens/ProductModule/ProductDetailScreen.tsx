@@ -33,6 +33,33 @@ const ProductDetailScreen: React.FC = () => {
 
   const [chatLoading, setChatLoading] = useState(false);
 
+  useEffect(() => {
+    socket.connect();
+
+    socket.on('connect', () => {
+      console.log('SOCKET CONNECTED:', socket.id);
+    });
+
+    socket.on('disconnect', () => {
+      console.log('SOCKET DISCONNECTED');
+    });
+
+    socket.on('connect_error', (err) => {
+      console.log('SOCKET ERROR:', err.message);
+    });
+
+    socket.onAny((event, ...args) => {
+      console.log('SOCKET EVENT:', event, args);
+    });
+
+    return () => {
+      socket.off('connect');
+      socket.off('disconnect');
+      socket.off('connect_error');
+      socket.offAny();
+    };
+  }, []);
+  
   // Traer producto
   useEffect(() => {
     dispatch(fetchProductById(productId));
@@ -110,7 +137,6 @@ const ProductDetailScreen: React.FC = () => {
 const canShowChatButton =
   !!userId &&
   !!selectedProduct?.owner?._id &&
-  selectedProduct.owner.username !== 'Unknown' &&
   !isOwner;
 
   return (
@@ -153,6 +179,10 @@ const canShowChatButton =
         <Text>Stock: {selectedProduct.stock}</Text>
         <Text>Estado: {selectedProduct.isActive ? 'Activo' : 'Inactivo'}</Text>
       </View>
+
+      <TouchableOpacity style={[styles.touchButton, { backgroundColor: COLORS.primary }]}>
+        <Text style={styles.touchButtonText}>Comprar o intercambiar</Text>
+      </TouchableOpacity>
 
       {/* Botón Chat */}
       {canShowChatButton && (

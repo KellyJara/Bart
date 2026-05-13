@@ -10,10 +10,8 @@ import {
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigation } from '@react-navigation/native';
 import styles from "./../../styles/screens/ProductModule/MyProductsScreen.styles";
-import {
-  fetchProducts,
-  deleteProduct,
-} from '../../redux/slices/product/productSlice';
+import {fetchProducts,deleteProduct,} from '../../redux/slices/product/productSlice';
+import { toggleFavorite, fetchFavorites } from '../../redux/slices/favorite/favoriteSlice';
 import { selectMyProducts } from '../../redux/slices/auth/authSelectors';
 import { RootState, AppDispatch } from '../../redux/store';
 import {COLORS} from '../../styles/Colors'
@@ -25,10 +23,16 @@ export default function MyProducts() {
   const myProducts = useSelector(selectMyProducts);
   const { roles, userId } = useSelector((state: RootState) => state.auth);
   const { loading } = useSelector((state: RootState) => state.products);
-
+  
+  const favorites = useSelector((state: RootState) => state.favorite.items);
+ 
   useEffect(() => {
     dispatch(fetchProducts());
   }, [dispatch]);
+  
+  useEffect(() => {
+  dispatch(fetchFavorites());
+}, [dispatch]);
 
   const canDelete = (ownerId: string) =>
     ownerId === userId || roles.includes('ADMIN');
@@ -46,6 +50,10 @@ export default function MyProducts() {
         },
       ]
     );
+  };
+
+  const handleFavorite = (productId: string) => {
+  dispatch(toggleFavorite(productId));
   };
 
   const handleEdit = (productId: string) => {
@@ -81,39 +89,54 @@ export default function MyProducts() {
         <Text>No has publicado productos.</Text>
       ) : (
         <FlatList
-  data={myProducts}
-  keyExtractor={(item) => item._id}
-  renderItem={({ item }) => (
-    <TouchableOpacity
-      style={styles.card}
-      onPress={() => handleEdit(item._id)}
-    >
-      {/* Contenedor horizontal para imagen y texto */}
-      <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-        {item.imgURL && (
-          <Image
-            source={{ uri: item.imgURL }} // URL de la imagen del producto
-            style={{ width: 50, height: 50, borderRadius: 5, marginRight: 10 }}
-            resizeMode="cover"
-          />
-        )}
-        <View>
-          <Text style={styles.name}>{item.name}</Text>
-          <Text style={styles.price}>${item.price}</Text>
-        </View>
-      </View>
+          data={myProducts}
+          keyExtractor={(item) => item._id}
+          renderItem={({ item }) => {
 
-      {canDelete(item.owner._id) && (
-        <TouchableOpacity
-          style={[styles.touchButton, { backgroundColor: '#FF3B30', marginTop: 5 }]}
-          onPress={() => handleDelete(item._id)}
-        >
-          <Text style={styles.touchButtonText}>Eliminar</Text>
-        </TouchableOpacity>
-      )}
-    </TouchableOpacity>
-  )}
-/>
+            const isFavorite = favorites.includes(item._id);
+
+            return (
+              <TouchableOpacity
+                style={styles.card}
+                onPress={() => handleEdit(item._id)}
+              >
+
+            {/* Contenedor horizontal */}
+            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+              {item.imgURL && (
+                <Image
+                  source={{ uri: item.imgURL }}
+                  style={{
+                    width: 50,
+                    height: 50,
+                    borderRadius: 5,
+                    marginRight: 10,
+                  }}
+                  resizeMode="cover"
+                />
+              )}
+
+              <View>
+                <Text style={styles.name}>{item.name}</Text>
+                <Text style={styles.price}>${item.price}</Text>
+              </View>
+            </View>
+
+            {canDelete(item.owner._id) && (
+              <TouchableOpacity
+                style={[
+                  styles.touchButton,
+                  { backgroundColor: '#FF3B30', marginTop: 5 },
+                ]}
+                onPress={() => handleDelete(item._id)}
+              >
+                <Text style={styles.touchButtonText}>Eliminar</Text>
+              </TouchableOpacity>
+            )}
+          </TouchableOpacity>
+            );
+          }}
+        />
       )}
     </View>
   );
